@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light dark"/>
+<meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"/>
+<link rel="icon" href="data:,"/>
+<title>Building Services Mechanical Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8eaed; --panel:#ffffff; --panel2:#f1f2f4; --ink:#0b0e13; --muted:#5d6672; --line:#d6dae0;
+  --accent:#ff4d0d; --air:#0878d1; --water:#068a77; --thermal:#c26a00; --power:#5b4bc4; --ok:#117a37; --warn:#9a5b00; --bad:#b42318;
+  --chip:#e2e4e8; --input:#ffffff; --dark:#0c1017; --dark2:#141a24; --darkline:#232b38;
+  --shadow:0 1px 0 rgba(11,14,19,.04),0 12px 32px rgba(11,14,19,.06);
+  --shadow-lg:0 2px 0 rgba(11,14,19,.04),0 24px 48px rgba(11,14,19,.10);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0c1017; --panel:#151a23; --panel2:#10141c; --ink:#f0f2f5; --muted:#98a2b0; --line:#262e3b;
+    --chip:#1e2531; --input:#0f141d; --shadow:0 1px 0 rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.35); --shadow-lg:0 24px 48px rgba(0,0,0,.5); color-scheme:dark; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.mono,code{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace,monospace}
+button{font:inherit;cursor:pointer}
+input,select{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::selection{background:var(--accent);color:#fff}
+.topbar{position:sticky;top:0;z-index:50;background:var(--dark);color:#eef1f5;border-bottom:1px solid #000;display:flex;align-items:center;gap:16px;padding:0 20px;min-height:58px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:13px;min-width:0;padding:10px 0}
+.brand-mark{width:36px;height:36px;flex:none;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:"Archivo","Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:900;font-size:13px;letter-spacing:-.02em;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.brand h1{font-family:"Archivo","Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:800;font-size:16.5px;margin:0;letter-spacing:-.01em;line-height:1.05;color:#fff}
+.brand p{margin:2px 0 0;font-size:11px;color:#8b95a5;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em}
+.topbar .spacer{flex:1}
+.search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 12px;min-width:210px;color:#8b95a5}
+.search:focus-within{border-color:var(--accent);background:rgba(255,255,255,.10);color:#fff}
+.search input{border:0;background:none;outline:none;color:#fff;width:160px;font-size:13.5px;font-weight:500}
+.search input::placeholder{color:#7c8694}
+.std-chip{font-size:11px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:6px 10px;color:#aeb7c4;background:rgba(255,255,255,.04);white-space:nowrap}
+.std-chip b{color:#fff;font-weight:600}
+.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2ee06f;box-shadow:0 0 0 3px rgba(46,224,111,.18);margin-right:7px;vertical-align:1px}
+.shell{display:grid;grid-template-columns:264px 1fr;max-width:1600px;margin:0 auto;align-items:start}
+nav.tools{position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto;padding:20px 14px 24px;background:var(--dark);color:#c6ceda;display:flex;flex-direction:column;gap:2px;border-right:1px solid #000}
+nav.tools::-webkit-scrollbar{width:0}
+nav.tools .navlabel{font-size:10.5px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#6e798a;margin:18px 10px 6px}
+nav.tools .navlabel:first-child{margin-top:2px}
+.navbtn{display:flex;align-items:center;gap:11px;text-align:left;border:1px solid transparent;background:none;color:#a7b0bf;padding:10px 11px;border-radius:8px;font-size:14px;font-weight:600;width:100%;position:relative;transition:background .15s,color .15s}
+.navbtn:hover{background:rgba(255,255,255,.06);color:#fff}
+.navbtn.active{background:#fff;color:var(--dark);box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.navbtn.active small{color:#5d6672}
+.navbtn .dot{width:8px;height:8px;border-radius:2px;flex:none}
+.navbtn small{margin-left:auto;color:#6e798a;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;font-weight:500}
+main{padding:30px 34px 72px;min-width:0;background-image:linear-gradient(rgba(90,105,125,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(90,105,125,.10) 1px,transparent 1px);background-size:36px 36px;background-position:center top}
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+  nav.tools{position:static;height:auto;flex-direction:row;flex-wrap:wrap;padding:10px 12px 12px;gap:6px}
+  nav.tools .navlabel{width:100%;margin:6px 4px 0;font-size:9.5px}
+  nav.tools .navlabel:first-child{margin-top:0}
+  .navbtn{width:auto;padding:7px 10px;font-size:13px;border-radius:7px;background:rgba(255,255,255,.05)}
+  .navbtn.active{background:#fff}
+  .navbtn small{display:none}
+  main{padding:20px 16px 56px}
+  .topbar{padding:0 14px;gap:10px}
+  .brand h1{font-size:15px}
+  .std-chip{display:none}
+  .search{min-width:0;flex:1;margin-bottom:10px}.search input{width:100%}
+  .hero-home h2{font-size:44px}
+}
+.tool{display:none}
+.tool.active{display:block;animation:in .28s cubic-bezier(.2,.7,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.tool.active{animation:none}}
+.toolhead{margin:2px 0 20px;max-width:820px}
+.toolhead h2{font-family:"Archivo","Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:800;font-size:clamp(30px,3.4vw,42px);margin:0;line-height:.98;letter-spacing:-.03em}
+.toolhead p{margin:10px 0 0;color:var(--muted);max-width:68ch;font-size:15px;line-height:1.6}
+.grid{display:grid;grid-template-columns:minmax(320px,430px) 1fr;gap:18px;align-items:start}
+@media(max-width:1080px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px}
+.card h3{margin:0 0 14px;font-size:12px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.field{margin-bottom:13px}
+.field label{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.field label .unit{color:var(--muted);font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;font-weight:500}
+.field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--input);color:var(--ink);font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;font-weight:500;transition:border-color .15s,box-shadow .15s}
+.field input:hover,.field select:hover{border-color:#aeb6c0}
+.field input:focus,.field select:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(11,14,19,.12)}
+.field input[type=range]{padding:0;accent-color:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;background:var(--dark);border-radius:9px;padding:3px;gap:3px;margin-bottom:16px}
+.seg button{flex:1;border:0;background:none;padding:8px 4px;border-radius:6px;font-size:13px;font-weight:700;color:#8b95a5}
+.seg button.on{background:#fff;color:var(--dark);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hint{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+.formula{margin-top:16px;background:var(--dark);border-radius:10px;padding:14px 15px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:#9aa6b5;line-height:1.8;overflow-x:auto}
+.formula b{color:#fff;font-weight:700}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+.stat .k{font-size:10.5px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stat .v{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:24px;font-weight:700;margin-top:4px;line-height:1.1;letter-spacing:-.03em}
+.stat .v small{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0}
+.stat .sub{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--muted);margin-top:3px;line-height:1.45}
+.stat.hero{background:var(--dark);color:#fff;border-color:#000;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.stat.hero::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--accent)}
+.stat.hero .k{color:#8b95a5}.stat.hero .sub,.stat.hero .v small{color:#8b95a5}
+.verdict{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.pill{font-size:12px;font-weight:700;border-radius:6px;padding:6px 10px;border:1px solid;line-height:1.3}
+.pill.ok{color:var(--ok);border-color:rgba(17,122,55,.45);background:var(--panel)}
+.pill.warn{color:var(--warn);border-color:rgba(154,91,0,.45);background:var(--panel)}
+.pill.bad{color:var(--bad);border-color:rgba(180,35,24,.45);background:var(--panel)}
+.pill.info{color:var(--muted);border-color:var(--line);background:var(--panel)}
+.bar{height:8px;border-radius:99px;background:var(--chip);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:99px}
+table.data{width:100%;border-collapse:collapse;font-size:13px}
+table.data th{text-align:left;font-size:10.5px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px;border-bottom:2px solid var(--ink)}
+table.data td{padding:8px;border-bottom:1px solid var(--line);font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+table.data td:first-child{font-family:"Manrope",system-ui,sans-serif;font-weight:600;font-size:13px}
+table.data tr.hl td{background:rgba(255,77,13,.08);font-weight:700}
+.viz{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+.viz h3{margin:0 0 12px;font-size:12px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);font-weight:600}
+svg{max-width:100%;height:auto;display:block}
+.foot{font-size:12.5px;color:var(--muted);margin-top:16px;max-width:82ch;line-height:1.65}
+.foot b{color:var(--ink)}
+.hero-home{padding:10px 0 26px;border-bottom:2px solid var(--ink);margin-bottom:22px}
+.hero-home .spec{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--muted);display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.hero-home .spec span b{color:var(--ink)}
+.hero-home h2{font-family:"Archivo","Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:900;font-size:clamp(42px,6.2vw,78px);line-height:.92;margin:0;max-width:12ch;letter-spacing:-.035em}
+.hero-home h2 em{font-style:normal;color:var(--accent)}
+.hero-home p{color:var(--muted);max-width:60ch;margin:16px 0 0;font-size:16px;line-height:1.65}
+.toolcards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:760px){.toolcards{grid-template-columns:1fr}}
+.tcard{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);color:var(--ink);display:flex;gap:16px;align-items:flex-start;transition:transform .16s,box-shadow .16s,border-color .16s;width:100%}
+.tcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--ink)}
+.tcard .dot{width:12px;height:12px;border-radius:3px;margin-top:5px;flex:none}
+.tcard h3{margin:0 0 4px;font-size:19px;font-family:"Archivo","Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:800;letter-spacing:-.02em}
+.tcard p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+.tcard .go{margin-top:10px;font-size:12.5px;font-weight:800;color:var(--ink);font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.tcard .go::after{content:" \2197";color:var(--accent)}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}
+.convrow{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:8px}
+.convrow input,.convrow select{padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--input);color:var(--ink);font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;width:100%}
+.convrow .eq{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}
+.glwrap{position:relative;background:#0c1017;border-radius:12px;overflow:hidden;height:540px;border:1px solid #000}
+.glwrap canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.glwrap canvas:active{cursor:grabbing}
+@media(max-width:900px){.glwrap{height:360px}}
+.glchips{position:absolute;top:12px;left:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none;max-width:calc(100% - 24px)}
+.glchip{background:rgba(9,13,19,.8);border:1px solid rgba(255,255,255,.16);color:#9fb0c3;border-radius:8px;padding:6px 10px;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;letter-spacing:.02em}
+.glchip b{color:#fff;font-weight:700}
+.glhint{position:absolute;right:12px;bottom:10px;color:#69758a;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;pointer-events:none}
+.glfallback{position:absolute;inset:0;display:grid;place-items:center;color:#8b95a5;text-align:center;padding:24px;font-size:13.5px;line-height:1.6}
+.tglrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:700}
+.tglrow:last-of-type{border-bottom:0}
+.tglrow small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;margin-top:1px}
+.tgl{flex:none;border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:99px;padding:5px 14px;font-size:11.5px;font-weight:700;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;transition:background .15s,color .15s}
+.tgl.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.viewrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.viewrow .tgl.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.go3d{margin-top:12px;display:inline-flex;align-items:center;gap:7px;background:var(--dark);color:#fff;border:1px solid #000;border-radius:8px;padding:9px 14px;font-size:12.5px;font-weight:800;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.go3d span{color:var(--accent)}
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">M—</div>
+    <div>
+      <h1>Building Services — Mechanical Toolkit</h1>
+      <p><span class="live-dot"></span>BUILT BY AN ENGINEER, FOR THE PLANT ROOM — SI + IP</p>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <label class="search">⌕ <input id="toolSearch" type="search" placeholder="Hunt for a tool — try duct, pump, coil…" aria-label="Search tools"></label>
+  <span class="std-chip"><b>ASHRAE</b> · CIBSE · EN</span>
+</header>
+
+<div class="shell">
+<nav class="tools" id="toolNav" aria-label="Tools">
+  <div class="navlabel">Start here</div>
+  <button class="navbtn active" data-tool="home"><span class="dot" style="background:var(--ink)"></span>Overview</button>
+  <button class="navbtn" data-tool="viz3d" data-keys="3d visual model viewer plant room duct pipe three dimensional render"><span class="dot" style="background:var(--accent)"></span>3D System Viewer<small>3D</small></button>
+  <div class="navlabel">Air side — start here on most jobs</div>
+  <button class="navbtn" data-tool="duct" data-keys="duct air friction sizing"><span class="dot" style="background:var(--air)"></span>Duct Sizer<small>Δp</small></button>
+  <button class="navbtn" data-tool="psych" data-keys="psychrometric humidity enthalpy dew wet bulb air state"><span class="dot" style="background:var(--air)"></span>Psychrometrics<small>h–x</small></button>
+  <button class="navbtn" data-tool="vent" data-keys="ventilation ashrae 62.1 fresh air breathing zone"><span class="dot" style="background:var(--air)"></span>Ventilation 62.1<small>Vbz</small></button>
+  <button class="navbtn" data-tool="fan" data-keys="fan affinity laws power pressure speed"><span class="dot" style="background:var(--air)"></span>Fan Laws &amp; Power<small>∝N³</small></button>
+  <div class="navlabel">Water side — where pumps earn their keep</div>
+  <button class="navbtn" data-tool="pipe" data-keys="pipe hydraulics pressure drop pump head darcy hazen"><span class="dot" style="background:var(--water)"></span>Pipe Hydraulics<small>Δp</small></button>
+  <button class="navbtn" data-tool="water" data-keys="chilled water chw flow load kw ton cop eer coil"><span class="dot" style="background:var(--water)"></span>Water &amp; Coil Loads<small>Q</small></button>
+  <div class="navlabel">Loads &amp; the tables I check against</div>
+  <button class="navbtn" data-tool="load" data-keys="cooling load estimator room sensible latent envelope solar"><span class="dot" style="background:var(--thermal)"></span>Room Load Estimator<small>kW</small></button>
+  <button class="navbtn" data-tool="conv" data-keys="converter units cfm pressure ton btu"><span class="dot" style="background:var(--power)"></span>Unit Converter<small>⇄</small></button>
+  <button class="navbtn" data-tool="ref" data-keys="reference properties air water density tables data"><span class="dot" style="background:var(--power)"></span>Properties &amp; Data<small>ρ·cp</small></button>
+</nav>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="tool active" id="tool-home">
+  <div class="hero-home">
+    <div class="spec"><span><b>09</b> TOOLS I ACTUALLY REACH FOR</span><span><b>0</b> HIDDEN FUDGE FACTORS</span><span>EVERY NUMBER SHOWS ITS WORKING — CHECK ME</span></div>
+    <h2>Size it like you'll be the one <em>running it.</em></h2>
+    <p>I got tired of spreadsheets that hid their maths and apps that gave you an answer with no way to argue with it. So I built this. Proper Darcy–Weisbach with Colebrook friction, Huebscher for rectangular duct, ASHRAE psychrometrics and 62.1 breathing-zone rates — live, checked against the bands I design to, with the working left underneath every result so you can check it with a pencil before it ever goes on a drawing.</p>
+  </div>
+  <div class="results" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div class="stat hero"><div class="k">Air at 20 °C, 101.325 kPa</div><div class="v">1.204 <small>kg/m³</small></div><div class="sub">cp 1.006 kJ/kg·K · ν 1.516×10⁻⁵ m²/s</div></div>
+    <div class="stat"><div class="k">Water at 10 °C</div><div class="v">999.7 <small>kg/m³</small></div><div class="sub">cp 4.19 kJ/kg·K · ν 1.30×10⁻⁶ m²/s</div></div>
+    <div class="stat"><div class="k">1 refrigeration ton</div><div class="v">3.517 <small>kW</small></div><div class="sub">= 12,000 BTU/h exactly by definition</div></div>
+    <div class="stat"><div class="k">The one equation that sizes half the plant room</div><div class="v">Q = ṁ·cp·ΔT</div><div class="sub">Air ≈ 1.2·L/s·ΔT W · Water ≈ 4.19·L/s·ΔT kW — I use it daily, it's in the Water tool</div></div>
+  </div>
+  <div class="toolcards" id="homeCards"></div>
+  <div class="refgrid" style="margin-top:14px">
+    <div class="card"><h3>The books on my shelf — what I sized this from</h3>
+      <table class="data"><tbody>
+      <tr><td>Ventilation</td><td>ASHRAE 62.1 — Ventilation Rate Procedure, Table 6.1 / 6.2</td></tr>
+      <tr><td>Moist air</td><td>ASHRAE Fundamentals psychrometrics · Buck saturation correlation · Stull wet-bulb</td></tr>
+      <tr><td>Duct &amp; pipe friction</td><td>Darcy–Weisbach · Colebrook via Haaland · Huebscher equivalent diameter</td></tr>
+      <tr><td>Pipe dimensions</td><td>ASME B36.10 Schedule 40 — design on true internal diameter</td></tr>
+      <tr><td>Design bands</td><td>CIBSE AM12 / ASHRAE practice ranges, shown as checks on every result</td></tr>
+      <tr><td>Input control</td><td>Every calculator input carries declared min/max limits, enforced in code before use; non-finite entries fall back to the design default</td></tr>
+      </tbody></table>
+      <p class="hint" style="margin-top:10px">Straight talk: this is my design-stage aid, not a substitute for judgement. Don't issue anything for construction until a qualified engineer has checked it against the project spec, your local code and the manufacturer's real data. And yes — uncontrolled when printed, same as every calc I've ever filed.</p>
+    </div>
+    <div class="card"><h3>Your paper trail — the bit that saves you in a design review</h3>
+      <div class="row2">
+        <div class="field"><label>Project</label><input type="text" id="recProject" placeholder="Project name" autocomplete="off"></div>
+        <div class="field"><label>Calc ref</label><input type="text" id="recRef" placeholder="e.g. MEP-CALC-001 Rev A" autocomplete="off"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Prepared by</label><input type="text" id="recBy" placeholder="Engineer name" autocomplete="off"></div>
+        <div class="field"><label>Checked by</label><input type="text" id="recChecked" placeholder="Checker name" autocomplete="off"></div>
+      </div>
+      <button class="go3d" id="dlRecord" type="button">Download calculation record (.txt) <span>↓</span></button>
+      <p class="hint" style="margin-top:10px">I added this because “trust me, I ran the numbers” doesn't survive a QA audit. It captures the headline result from every calculator, with the date, the standards basis and the check status. Run each tool first — the record only writes down what's actually on screen.</p>
+    </div>
+  </div>
+  <p class="foot"><b>How I use it:</b> pick a tool on the left, punch in your actual conditions — not the brochure ones — and read three things: the headline number, the check pills underneath it, and the worked formula. Everything updates as you type. These are design-stage numbers; your final selection still needs the manufacturer's data, system effect, and your project's spec. If a result looks too clean, it probably is — go back and argue with an input.</p>
+</section>
+
+<!-- ============ DUCT ============ -->
+<section class="tool" id="tool-duct">
+  <div class="toolhead"><h2>Duct Sizer</h2><p>The duct calc I wish someone had handed me on my first survey. Equal-friction or velocity sizing for round and rectangular duct — real Darcy–Weisbach friction (Haaland, not a guess), Huebscher equivalent diameter for the rectangular stuff, and my favourite bit: a reverse solver. Tell it the Pa/m you can afford, it tells you the diameter you actually need.</p></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Your numbers — punch them in</h3>
+      <div class="seg" id="ductShape"><button class="on" data-v="round">Round</button><button data-v="rect">Rectangular</button></div>
+      <div class="field"><label>Airflow <span class="unit">L/s</span></label><input type="number" id="dQ" value="2500" min="1" step="10"></div>
+      <div id="ductRound">
+        <div class="field"><label>Diameter <span class="unit">mm</span></label><input type="number" id="dD" value="630" min="50" step="5"></div>
+      </div>
+      <div id="ductRect" style="display:none">
+        <div class="row2">
+          <div class="field"><label>Width <span class="unit">mm</span></label><input type="number" id="dW" value="800" min="50" step="10"></div>
+          <div class="field"><label>Height <span class="unit">mm</span></label><input type="number" id="dH" value="300" min="50" step="10"></div>
+        </div>
+      </div>
+      <div class="field"><label>Straight length <span class="unit">m</span></label><input type="number" id="dL" value="25" min="0" step="1"></div>
+      <div class="field"><label>Fittings — sum of ζ (K) factors <span class="unit">Σζ</span></label><input type="number" id="dK" value="3.5" min="0" step="0.1"><div class="hint">From my notebook: 90° radius bend ≈ 0.25 · tee branch ≈ 0.6–1.2 · damper ≈ 0.3–3. This is where most duct calcs quietly go wrong — count your fittings honestly.</div></div>
+      <div class="field"><label>Material</label><select id="dMat">
+        <option value="0.09">Galvanised steel — ε 0.09 mm</option>
+        <option value="0.03">Aluminium / stainless — ε 0.03 mm</option>
+        <option value="0.9">Flexible duct (corrugated) — ε 0.9 mm</option>
+        <option value="3">Duct board / rough — ε 3.0 mm</option>
+      </select></div>
+      <div class="field"><label>Air temperature <span class="unit">°C</span></label><input type="number" id="dT" value="20" step="1"></div>
+      <div class="field"><label>Reverse solve — target friction rate <span class="unit">Pa/m</span></label><input type="number" id="dTarget" value="1.0" min="0.05" step="0.05"></div>
+      <div class="formula"><b>The maths — no black box</b><br>De = 1.30·(a·b)^0.625 / (a+b)^0.25 &nbsp;(Huebscher)<br>Δp/L = f·(ρV²/2)/De &nbsp;·&nbsp; Δp<sub>fit</sub> = Σζ·(ρV²/2)<br>1/√f = −1.8·log₁₀[(ε/3.7D)^1.11 + 6.9/Re] &nbsp;(Haaland)</div>
+    </div>
+    <div>
+      <div class="results">
+        <div class="stat hero"><div class="k">Total pressure drop</div><div class="v" id="dTot">—</div><div class="sub" id="dTotSub"></div></div>
+        <div class="stat"><div class="k">Velocity</div><div class="v" id="dVel">—</div><div class="sub" id="dVelSub"></div></div>
+        <div class="stat"><div class="k">Friction rate</div><div class="v" id="dFric">—</div><div class="sub">straight duct only</div></div>
+        <div class="stat"><div class="k">Velocity pressure</div><div class="v" id="dPv">—</div><div class="sub" id="dReSub"></div></div>
+      </div>
+      <div class="verdict" id="dVerdict"></div>
+      <div class="viz"><h3>Section — drawn to scale, not sketched</h3><div id="dViz"></div>
+        <button class="go3d" data-go="viz3d">Walk this duct run in 3D <span>↗</span></button>
+        <div class="results" style="margin:12px 0 0">
+          <div class="stat"><div class="k">Equivalent diameter</div><div class="v" id="dDe" style="font-size:18px">—</div></div>
+          <div class="stat"><div class="k">Free area</div><div class="v" id="dArea" style="font-size:18px">—</div></div>
+          <div class="stat"><div class="k">Required Ø at target rate</div><div class="v" id="dReq" style="font-size:18px">—</div><div class="sub" id="dReqSub"></div></div>
+        </div>
+      </div>
+      <div class="card"><h3>Off-the-shelf spiral sizes at this airflow — what you'd actually order</h3><table class="data"><thead><tr><th>Ø mm</th><th>Velocity m/s</th><th>Pa/m</th><th>My call</th></tr></thead><tbody id="dTable"></tbody></table></div>
+    </div>
+  </div>
+  <p class="foot"><b>What I tell juniors (ASHRAE / CIBSE AM12 behind it):</b> mains 6–10 m/s, branches 4–6 m/s, final runouts 2.5–4 m/s if anyone has to sleep or concentrate near them; 0.8–1.2 Pa/m is the equal-friction band I design to. And flex duct — its drop can be 2–4× the straight prediction if it's sagging like a hammock. Keep flex short, pulled tight, or don't come crying to me about a starved grille.</p>
+</section>
+
+<!-- ============ PSYCH ============ -->
+<section class="tool" id="tool-psych">
+  <div class="toolhead"><h2>Psychrometrics</h2><p>If you only learn one chart in this trade, learn this one. Give me a dry-bulb and any humidity handle — RH, wet-bulb or dew point — and I'll give you back the full state: enthalpy, humidity ratio, density, the lot. Buck saturation correlation, ASHRAE formulations underneath, and your point plotted live so you can see where you sit, not just read a number.</p></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Pin your state point</h3>
+      <div class="field"><label>Dry-bulb temperature <span class="unit">°C</span></label><input type="number" id="pT" value="26" step="0.5"></div>
+      <div class="seg" id="pMode"><button class="on" data-v="rh">Relative humidity</button><button data-v="wb">Wet-bulb</button><button data-v="dp">Dew point</button></div>
+      <div class="field"><label id="pSecondLabel">Relative humidity <span class="unit">%</span></label><input type="number" id="pSecond" value="50" step="1"></div>
+      <div class="field"><label>Barometric pressure <span class="unit">kPa</span></label><input type="number" id="pP" value="101.325" step="0.1"><div class="hint">Sea level 101.325 · 500 m ≈ 95.5 · 1,000 m ≈ 89.9 · 1,500 m ≈ 84.6</div></div>
+      <div class="field"><label>Airflow for load calc <span class="unit">L/s</span></label><input type="number" id="pQ" value="1000" step="10"></div>
+      <div class="formula"><b>The maths — no black box</b><br>p<sub>ws</sub> = 0.61121·exp[(18.678 − T/234.5)·T/(257.14+T)] kPa (Buck)<br>W = 0.621945·p<sub>w</sub>/(p − p<sub>w</sub>) &nbsp;·&nbsp; h = 1.006·T + W·(2501 + 1.86·T)<br>Wet-bulb by Stull (2011) empirical solution</div>
+    </div>
+    <div>
+      <div class="results">
+        <div class="stat hero"><div class="k">Enthalpy</div><div class="v" id="pH">—</div><div class="sub">kJ per kg dry air</div></div>
+        <div class="stat"><div class="k">Humidity ratio</div><div class="v" id="pW">—</div><div class="sub">kg water / kg dry air</div></div>
+        <div class="stat"><div class="k">Dew point</div><div class="v" id="pDP">—</div></div>
+        <div class="stat"><div class="k">Wet-bulb</div><div class="v" id="pWB">—</div></div>
+        <div class="stat"><div class="k">Density</div><div class="v" id="pRho">—</div><div class="sub" id="pVol"></div></div>
+        <div class="stat"><div class="k">Vapour pressure</div><div class="v" id="pPv">—</div><div class="sub" id="pRhOut"></div></div>
+      </div>
+      <div class="viz"><h3>The chart — your point, live, against saturation &amp; RH curves</h3><div id="pChart"></div></div>
+      <div class="card"><h3>Now do something with it — cool / heat this air to…</h3>
+        <div class="row2">
+          <div class="field"><label>Target dry-bulb <span class="unit">°C</span></label><input type="number" id="pT2" value="13" step="0.5"></div>
+          <div class="field"><label>Target RH <span class="unit">%</span></label><input type="number" id="pRH2" value="90" step="1"></div>
+        </div>
+        <div class="results" style="margin:0">
+          <div class="stat"><div class="k">Total load</div><div class="v" id="pLoadTot" style="font-size:19px">—</div></div>
+          <div class="stat"><div class="k">Sensible</div><div class="v" id="pLoadS" style="font-size:19px">—</div></div>
+          <div class="stat"><div class="k">Latent</div><div class="v" id="pLoadL" style="font-size:19px">—</div></div>
+          <div class="stat"><div class="k">SHR</div><div class="v" id="pSHR" style="font-size:19px">—</div></div>
+        </div>
+        <p class="hint" style="margin-top:10px">Sensible comes off the ΔT, total off the Δh — what's left is latent, and latent is the bit that catches people out. Negative means you're heating or humidifying, not cooling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VENT ============ -->
+<section class="tool" id="tool-vent">
+  <div class="toolhead"><h2>Ventilation — ASHRAE 62.1</h2><p>Fresh air is the number everyone argues about in the design meeting, so let's do it properly. Breathing-zone rate by the Ventilation Rate Procedure — <span class="mono">Vbz = Rp·Pz + Ra·Az</span> — then corrected for how well your air actually gets to people's faces: <span class="mono">Voz = Vbz / Ez</span>. Rates straight from Table 6.1 (SI), no rounding games.</p></div>
+  <div class="grid">
+    <div class="card">
+      <h3>The zone — be honest about occupancy</h3>
+      <div class="field"><label>Space type (Table 6.1)</label><select id="vType"></select></div>
+      <div class="field"><label>Floor area Az <span class="unit">m²</span></label><input type="number" id="vA" value="120" min="1" step="1"></div>
+      <div class="field"><label>Occupants Pz <span class="unit">people</span></label><input type="number" id="vP" value="12" min="0" step="1"><div class="hint" id="vDensity"></div></div>
+      <div class="row2">
+        <div class="field"><label>Rp <span class="unit">L/s·person</span></label><input type="number" id="vRp" step="0.1"></div>
+        <div class="field"><label>Ra <span class="unit">L/s·m²</span></label><input type="number" id="vRa" step="0.05"></div>
+      </div>
+      <div class="field"><label>Zone air distribution effectiveness Ez</label><select id="vEz">
+        <option value="1.0">Ceiling supply cool air / floor return — Ez 1.0</option>
+        <option value="1.0">Ceiling supply warm air, ceiling return — Ez 1.0</option>
+        <option value="0.8">Ceiling supply warm air (&gt;8 °C above space), ceiling return — Ez 0.8</option>
+        <option value="1.2">Displacement / underfloor, stratified — Ez 1.2</option>
+        <option value="0.5">Ceiling supply warm air, floor return (stratified) — Ez 0.5</option>
+      </select></div>
+      <div class="field"><label>Room volume for ACH check <span class="unit">m³</span></label><input type="number" id="vVol" value="360" step="10"></div>
+      <div class="formula"><b>The maths — no black box</b><br>Vbz = Rp·Pz + Ra·Az<br>Voz = Vbz / Ez<br>System intake Vot then needs Ev (system ventilation efficiency) from Table 6.3 — and the worst zone governs, every time.</div>
+    </div>
+    <div>
+      <div class="results">
+        <div class="stat hero"><div class="k">Zone outdoor airflow Voz</div><div class="v" id="vVoz">—</div><div class="sub" id="vVozSub"></div></div>
+        <div class="stat"><div class="k">Breathing zone Vbz</div><div class="v" id="vVbz">—</div></div>
+        <div class="stat"><div class="k">Per person</div><div class="v" id="vPer">—</div></div>
+        <div class="stat"><div class="k">Per m²</div><div class="v" id="vPerM">—</div></div>
+        <div class="stat"><div class="k">Outdoor-air ACH</div><div class="v" id="vACH">—</div></div>
+        <div class="stat"><div class="k">People component</div><div class="v" id="vPeople" style="font-size:18px">—</div><div class="sub" id="vAreaSub"></div></div>
+      </div>
+      <div class="viz"><h3>Where that air is actually going — people vs building</h3><div id="vBar"></div></div>
+      <div class="card"><h3>The spaces I get asked about most — at default density</h3><table class="data"><thead><tr><th>Space</th><th>Rp</th><th>Ra</th><th>Default density</th><th>Total at density</th></tr></thead><tbody id="vTable"></tbody></table></div>
+    </div>
+  </div>
+  <p class="foot"><b>Traps I've watched people fall into:</b> 62.1 is a minimum for air quality, not your cooling quantity — supply air is usually far larger, don't confuse the two. Multi-zone systems must apply Ev (often 0.7–0.9 on VAV), which pushes intake above the simple sum of Voz. And CO₂ demand control can trim the people component in operation, but never below Ra·Az — the building itself still breathes.</p>
+</section>
+
+<!-- ============ PIPE ============ -->
+<section class="tool" id="tool-pipe">
+  <div class="toolhead"><h2>Pipe Hydraulics</h2><p>Pumps don't fail on head, they fail on head nobody calculated. This does it properly: Darcy–Weisbach pressure drop and pump head (Colebrook friction via Haaland), cross-checked against Hazen–Williams so the two methods can argue with each other before your pump selection has to. Water properties come off the real tables at your fluid temperature — not a 20 °C assumption.</p></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Your numbers — punch them in</h3>
+      <div class="field"><label>Flow rate <span class="unit">L/s</span></label><input type="number" id="wQ" value="8" min="0.01" step="0.5"></div>
+      <div class="field"><label>Nominal pipe size</label><select id="wSize"></select><div class="hint" id="wIdHint"></div></div>
+      <div class="field"><label>Custom internal diameter <span class="unit">mm (overrides size)</span></label><input type="number" id="wD" value="" placeholder="leave blank to use size above" step="0.1"></div>
+      <div class="field"><label>Pipe material</label><select id="wMat">
+        <option value="0.045">Steel (commercial) — ε 0.045 mm · C 130</option>
+        <option value="0.0015">Copper / drawn tube — ε 0.0015 mm · C 140</option>
+        <option value="0.007">Plastic (PVC/PEX/PP-R) — ε 0.007 mm · C 150</option>
+        <option value="0.26">Cast iron (aged) — ε 0.26 mm · C 100</option>
+      </select></div>
+      <div class="row2">
+        <div class="field"><label>Straight length <span class="unit">m</span></label><input type="number" id="wL" value="60" step="1"></div>
+        <div class="field"><label>Fluid temp <span class="unit">°C</span></label><input type="number" id="wT" value="10" step="1"></div>
+      </div>
+      <div class="field"><label>Fittings &amp; valves — sum of ζ (K)</label><input type="number" id="wK" value="12" step="0.5"><div class="hint">From my notebook: 90° elbow ≈ 0.9 · tee through ≈ 0.6 · tee branch ≈ 1.8 · gate valve ≈ 0.15 · globe valve ≈ 10 (yes, ten — globe valves are head-eaters) · check valve ≈ 2.5</div></div>
+      <div class="field"><label>Static lift (open systems) <span class="unit">m</span></label><input type="number" id="wStatic" value="0" step="0.5"></div>
+      <div class="field"><label>Pump efficiency <span class="unit">%</span></label><input type="number" id="wEff" value="70" step="1"></div>
+      <div class="formula"><b>The maths — no black box</b><br>Δp = f·(L/D)·(ρV²/2) + Σζ·(ρV²/2) · head = Δp/(ρg)<br>Hazen–Williams: Δp/L = 10.67·ρg·Q^1.852/(C^1.852·D^4.87)</div>
+    </div>
+    <div>
+      <div class="results">
+        <div class="stat hero"><div class="k">Pump duty head</div><div class="v" id="wHead">—</div><div class="sub" id="wHeadSub"></div></div>
+        <div class="stat"><div class="k">Velocity</div><div class="v" id="wVel">—</div><div class="sub" id="wVelSub"></div></div>
+        <div class="stat"><div class="k">Pressure drop / 100 m</div><div class="v" id="wRate">—</div><div class="sub">straight pipe, Darcy</div></div>
+        <div class="stat"><div class="k">Pump shaft power</div><div class="v" id="wPow">—</div><div class="sub" id="wPowSub"></div></div>
+        <div class="stat"><div class="k">Reynolds number</div><div class="v" id="wRe" style="font-size:18px">—</div><div class="sub" id="wFlowRegime"></div></div>
+        <div class="stat"><div class="k">Hazen–Williams check</div><div class="v" id="wHW" style="font-size:18px">—</div><div class="sub">total Δp by H–W (straight only)</div></div>
+      </div>
+      <div class="verdict" id="wVerdict"></div>
+      <div style="margin:0 0 14px"><button class="go3d" data-go="viz3d">Walk this pipe run in 3D <span>↗</span></button></div>
+      <div class="card"><h3>One size up, one size down — because that's the real decision</h3><table class="data"><thead><tr><th>Size</th><th>ID mm</th><th>m/s</th><th>kPa / 100 m</th><th>My call</th></tr></thead><tbody id="wTable"></tbody></table></div>
+    </div>
+  </div>
+  <p class="foot"><b>How I size pipe (CIBSE AM12 / ASHRAE behind it):</b> 0.9–2.4 m/s where people can hear it — faster gets noisy and starts eating the pipe — and 100–350 Pa/m as the economic gradient; past ~400 Pa/m you're just buying pump energy forever. Closed loops owe nothing for height, only open systems (tanks, towers) pay for lift. And don't forget control-valve authority — add ≥ 30–50 % of the branch drop on top of index-run friction, or your valves will hunt and you'll be back on site.</p>
+</section>
+
+<!-- ============ WATER / COIL ============ -->
+<section class="tool" id="tool-water">
+  <div class="toolhead"><h2>Water &amp; Coil Loads</h2><p>Two equations size most of the plant I work on, and both live here. Water-side flow from load and ΔT — get the ΔT wrong and everything downstream is wrong — and air-side coil duty from mass flow and enthalpy difference. Plus the chiller converter I kept re-deriving on site: COP ↔ EER ↔ kW/ton, done once, done right.</p></div>
+  <div class="grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card"><h3>Water-side flow — load in, flow out</h3>
+        <div class="field"><label>Load <span class="unit">kW</span></label><input type="number" id="cLoad" value="120" step="1"></div>
+        <div class="row2">
+          <div class="field"><label>Flow temp <span class="unit">°C</span></label><input type="number" id="cTF" value="6" step="0.5"></div>
+          <div class="field"><label>Return temp <span class="unit">°C</span></label><input type="number" id="cTR" value="12" step="0.5"></div>
+        </div>
+        <div class="field"><label>Fluid</label><select id="cFluid">
+          <option value="0">Water</option><option value="20">Propylene glycol 20 % (cp ≈ 3.95, ρ ≈ 1030)</option>
+          <option value="35">Propylene glycol 35 % (cp ≈ 3.72, ρ ≈ 1050)</option><option value="e35">Ethylene glycol 35 % (cp ≈ 3.55, ρ ≈ 1065)</option>
+        </select></div>
+        <div class="formula"><b>Q = ṁ · cp · ΔT</b> &nbsp;→&nbsp; flow (L/s) ≈ Q / (ρ·cp·ΔT) × 1000<br>Water shortcut: L/s ≈ kW / (4.19 × ΔT)</div>
+      </div>
+      <div class="card"><h3>Chiller speak, translated — COP ↔ EER ↔ kW/ton</h3>
+        <div class="field"><label>Cooling capacity <span class="unit">kW</span></label><input type="number" id="cCap" value="350" step="5"></div>
+        <div class="field"><label>Input power <span class="unit">kW</span></label><input type="number" id="cPin" value="62" step="1"></div>
+        <div class="formula">COP = kW<sub>cool</sub>/kW<sub>in</sub> · EER (BTU/Wh) = COP × 3.412 · kW/ton = 3.517/COP</div>
+      </div>
+    </div>
+    <div>
+      <div class="results">
+        <div class="stat hero"><div class="k">Required flow</div><div class="v" id="cFlow">—</div><div class="sub" id="cFlowSub"></div></div>
+        <div class="stat"><div class="k">Load in tons</div><div class="v" id="cTons">—</div></div>
+        <div class="stat"><div class="k">Mass flow</div><div class="v" id="cMass">—</div></div>
+        <div class="stat"><div class="k">ΔT</div><div class="v" id="cDT">—</div><div class="sub" id="cDTsub"></div></div>
+      </div>
+      <div class="verdict" id="cVerdict"></div>
+      <div class="results">
+        <div class="stat"><div class="k">COP</div><div class="v" id="cCOP">—</div></div>
+        <div class="stat"><div class="k">EER</div><div class="v" id="cEER">—</div><div class="sub">BTU per Wh</div></div>
+        <div class="stat"><div class="k">kW / ton</div><div class="v" id="cKwTon">—</div></div>
+        <div class="stat"><div class="k">Capacity</div><div class="v" id="cCapOut">—</div><div class="sub">tons of refrigeration</div></div>
+      </div>
+      <div class="card"><h3>Air-side coil duty — straight off the psych states</h3>
+        <div class="row2">
+          <div class="field"><label>Entering DB / RH <span class="unit">°C / %</span></label><div class="row2"><input type="number" id="cE1" value="26"><input type="number" id="cE2" value="50"></div></div>
+          <div class="field"><label>Leaving DB / RH <span class="unit">°C / %</span></label><div class="row2"><input type="number" id="cL1" value="12.5"><input type="number" id="cL2" value="92"></div></div>
+        </div>
+        <div class="field"><label>Coil airflow <span class="unit">L/s</span></label><input type="number" id="cAir" value="4000" step="50"></div>
+        <div class="results" style="margin:0">
+          <div class="stat"><div class="k">Total coil duty</div><div class="v" id="cCoilT" style="font-size:19px">—</div></div>
+          <div class="stat"><div class="k">Sensible</div><div class="v" id="cCoilS" style="font-size:19px">—</div></div>
+          <div class="stat"><div class="k">Latent</div><div class="v" id="cCoilL" style="font-size:19px">—</div></div>
+          <div class="stat"><div class="k">Condensate</div><div class="v" id="cCond" style="font-size:19px">—</div><div class="sub">litres per hour</div></div>
+        </div>
+      </div>
+      <p class="foot"><b>Low-ΔT syndrome — I've chased this fault more than any other:</b> measure 3–4 K across a coil designed for 6 K and your flow balloons for the same load, and pump energy climbs with the cube of that flow. Don't take my word for it — run 6 K, then run 3.5 K at the same kW above and watch the flow. That's the penalty, in numbers you can take to the client.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAN ============ -->
+<section class="tool" id="tool-fan">
+  <div class="toolhead"><h2>Fan Laws &amp; Power</h2><p>The cube law is the closest thing this trade has to free money, and this page is how I prove it to clients. Affinity laws for speed changes, air and shaft power, and — the bit that gets the VSD approved — what the speed change does to the annual energy bill. Same fan, same system curve, geometrically similar operation; stray off that and the laws stop owing you anything.</p></div>
+  <div class="grid">
+    <div class="card"><h3>Where the fan sits today — condition 1</h3>
+      <div class="row2">
+        <div class="field"><label>Flow <span class="unit">L/s</span></label><input type="number" id="fQ1" value="5000" step="50"></div>
+        <div class="field"><label>Pressure <span class="unit">Pa</span></label><input type="number" id="fP1" value="650" step="10"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Speed 1 <span class="unit">rpm</span></label><input type="number" id="fN1" value="1450" step="10"></div>
+        <div class="field"><label>Speed 2 <span class="unit">rpm</span></label><input type="number" id="fN2" value="1160" step="10"></div>
+      </div>
+      <div class="field"><label>Fan total efficiency at duty <span class="unit">%</span></label><input type="number" id="fEff" value="68" step="1"></div>
+      <div class="field"><label>Run hours / year <span class="unit">h</span></label><input type="number" id="fHrs" value="3000" step="50"></div>
+      <div class="field"><label>Electricity price <span class="unit">per kWh</span></label><input type="number" id="fPrice" value="0.22" step="0.01"></div>
+      <div class="formula"><b>Affinity laws — tattoo these on your brain</b><br>Q₂ = Q₁·(N₂/N₁) · Δp₂ = Δp₁·(N₂/N₁)² · P₂ = P₁·(N₂/N₁)³<br>Shaft power = Q·Δp / η</div>
+    </div>
+    <div>
+      <div class="results">
+        <div class="stat hero"><div class="k">Shaft power at speed 2</div><div class="v" id="fPow2">—</div><div class="sub" id="fPow2Sub"></div></div>
+        <div class="stat"><div class="k">Flow at speed 2</div><div class="v" id="fQ2">—</div></div>
+        <div class="stat"><div class="k">Pressure at speed 2</div><div class="v" id="fP2">—</div></div>
+        <div class="stat"><div class="k">Power at speed 1</div><div class="v" id="fPow1">—</div><div class="sub">air power &amp; shaft</div></div>
+      </div>
+      <div class="viz"><h3>Power vs speed — watch that cube climb</h3><div id="fChart"></div></div>
+      <div class="results">
+        <div class="stat"><div class="k">Energy at speed 1</div><div class="v" id="fE1" style="font-size:19px">—</div><div class="sub">kWh / year</div></div>
+        <div class="stat"><div class="k">Energy at speed 2</div><div class="v" id="fE2" style="font-size:19px">—</div><div class="sub">kWh / year</div></div>
+        <div class="stat"><div class="k">Annual saving</div><div class="v" id="fSave" style="font-size:19px">—</div><div class="sub" id="fSaveSub"></div></div>
+      </div>
+      <p class="foot"><b>Why I push VSDs on every retrofit:</b> knock 20 % off the speed and you've halved the fan power (0.8³ = 0.51). Throttle a damper instead and you keep the speed, burn the pressure as pure loss, and save almost nothing for the same flow. One honest caveat from experience: the cube law assumes a fixed, all-friction system curve — with a big fixed static head in the system, it will flatter the savings. Check before you promise.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOAD ============ -->
+<section class="tool" id="tool-load">
+  <div class="toolhead"><h2>Room Cooling Load Estimator</h2><p>My early-stage load build-up, the way I was taught to do it on paper: envelope, solar through the glass, people, lights, kit, infiltration and fresh air — sensible and latent kept separate. Every single gain is an input you can argue with; I hid nothing, because hidden allowances are how plant gets oversized. Use it for sizing and feasibility — when the job gets serious, it earns a full RTS / heat-balance model.</p></div>
+  <div class="grid">
+    <div class="card"><h3>The room, as it really is</h3>
+      <div class="row2">
+        <div class="field"><label>Floor area <span class="unit">m²</span></label><input type="number" id="lA" value="150" step="1"></div>
+        <div class="field"><label>Ceiling height <span class="unit">m</span></label><input type="number" id="lHgt" value="3" step="0.1"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Outside DB / RH <span class="unit">°C / %</span></label><div class="row2"><input type="number" id="lOT" value="35"><input type="number" id="lORH" value="45"></div></div>
+        <div class="field"><label>Inside DB / RH <span class="unit">°C / %</span></label><div class="row2"><input type="number" id="lIT" value="23"><input type="number" id="lIRH" value="50"></div></div>
+      </div>
+      <div class="field"><label>External wall area (net) <span class="unit">m²</span></label><input type="number" id="lWall" value="90" step="1"></div>
+      <div class="row2">
+        <div class="field"><label>Wall U-value <span class="unit">W/m²K</span></label><input type="number" id="lUW" value="0.35" step="0.05"></div>
+        <div class="field"><label>Roof / other U·A equiv <span class="unit">W/K</span></label><input type="number" id="lUA" value="25" step="1"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Glazing area <span class="unit">m²</span></label><input type="number" id="lGl" value="30" step="1"></div>
+        <div class="field"><label>SHGC / g-value</label><input type="number" id="lSHGC" value="0.35" step="0.05"></div>
+      </div>
+      <div class="field"><label>Solar irradiance on glazing <span class="unit">W/m²</span></label><input type="number" id="lSol" value="450" step="10"><div class="hint">Peak vertical-surface values I start from: E ≈ 500–650 · S ≈ 350–500 · W ≈ 550–700 (northern hemisphere, summer). West glass in the afternoon is the usual villain.</div></div>
+      <div class="row2">
+        <div class="field"><label>Occupants</label><input type="number" id="lPpl" value="15" step="1"></div>
+        <div class="field"><label>Gain / person S / L <span class="unit">W</span></label><div class="row2"><input type="number" id="lPs" value="70"><input type="number" id="lPl" value="45"></div></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Lighting <span class="unit">W/m²</span></label><input type="number" id="lLight" value="8" step="0.5"></div>
+        <div class="field"><label>Equipment <span class="unit">W/m²</span></label><input type="number" id="lEq" value="15" step="1"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Infiltration <span class="unit">ACH</span></label><input type="number" id="lInf" value="0.3" step="0.1"></div>
+        <div class="field"><label>Fresh air <span class="unit">L/s (from 62.1 tool)</span></label><input type="number" id="lFA" value="180" step="5"></div>
+      </div>
+      <div class="field"><label>Safety / diversity factor <span class="unit">×</span></label><input type="number" id="lSF" value="1.1" step="0.05"></div>
+    </div>
+    <div>
+      <div class="results">
+        <div class="stat hero"><div class="k">Total cooling load</div><div class="v" id="lTot">—</div><div class="sub" id="lTotSub"></div></div>
+        <div class="stat"><div class="k">Sensible</div><div class="v" id="lSens">—</div></div>
+        <div class="stat"><div class="k">Latent</div><div class="v" id="lLat">—</div></div>
+        <div class="stat"><div class="k">W / m²</div><div class="v" id="lWm">—</div><div class="sub" id="lSHR"></div></div>
+      </div>
+      <div class="viz"><h3>Where the load is really coming from</h3><div id="lBars"></div></div>
+      <div class="card"><h3>So what does that mean for the plant?</h3><div id="lImply" style="font-size:14px;line-height:1.75"></div></div>
+    </div>
+  </div>
+  <p class="foot"><b>My gut-check, before I trust any of this:</b> offices land around 100–160 W/m² in hot climates, 60–110 W/m² in temperate ones. Land far outside your building type's band and I go straight back to the solar and fresh-air inputs — that's where the mistake is hiding, nine times out of ten. Fresh air is worked on enthalpy difference here, because in a humid climate it's routinely the biggest single load in the room.</p>
+</section>
+
+<!-- ============ CONVERTER ============ -->
+<section class="tool" id="tool-conv">
+  <div class="toolhead"><h2>Unit Converter</h2><p>Because half my working life is translating between a US datasheet, a European catalogue and a site gauge that reads in inches of water. Exact factors, only the units this trade actually meets. Type in any row — everything else follows.</p></div>
+  <div class="refgrid" id="convGroups"></div>
+  <p class="foot"><b>The exact factors I used — no rounded “close enough”:</b> 1 in = 25.4 mm · 1 ft³/min = 0.471947 L/s · 1 BTU/h = 0.293071 W · 1 ton refrig. = 12,000 BTU/h = 3.51685 kW · 1 psi = 6.89476 kPa · 1 in w.g. = 248.84 Pa (at 4 °C) · 1 US gal = 3.78541 L.</p>
+</section>
+
+<!-- ============ REFERENCE ============ -->
+<section class="tool" id="tool-ref">
+  <div class="toolhead"><h2>Properties &amp; Reference Data</h2><p>Every calculator on this site stands on these tables, so here they are — the same pages that live, grease-stained, in my site folder. Nothing is buried in the code where you can't see it; pick any number above and verify it by hand from here.</p></div>
+  <div class="refgrid">
+    <div class="card"><h3>Water — saturated liquid properties</h3><table class="data"><thead><tr><th>°C</th><th>ρ kg/m³</th><th>cp kJ/kgK</th><th>ν ×10⁻⁶ m²/s</th></tr></thead><tbody id="refWater"></tbody></table></div>
+    <div class="card"><h3>Dry air at 101.325 kPa</h3><table class="data"><thead><tr><th>°C</th><th>ρ kg/m³</th><th>cp kJ/kgK</th><th>ν ×10⁻⁶ m²/s</th></tr></thead><tbody id="refAir"></tbody></table></div>
+    <div class="card"><h3>Steel pipe — Schedule 40 (ASME B36.10)</h3><table class="data"><thead><tr><th>DN</th><th>OD mm</th><th>ID mm</th><th>Area cm²</th></tr></thead><tbody id="refPipe"></tbody></table><p class="hint">Copper tube (EN 1057) and plastic systems differ — design on the internal diameter, never the nominal. That mistake has embarrassed better engineers than me.</p></div>
+    <div class="card"><h3>Quick-checks I run before I believe a design</h3>
+      <table class="data"><tbody>
+      <tr><td>CHW temperatures</td><td>6 / 12 °C typical (ΔT 6 K)</td></tr>
+      <tr><td>LTHW temperatures</td><td>82 / 71 °C legacy · 60 / 40 °C condensing</td></tr>
+      <tr><td>Condenser water</td><td>29.5 / 35.5 °C typical</td></tr>
+      <tr><td>Office design condition</td><td>23 ± 1 °C · 40–60 % RH</td></tr>
+      <tr><td>Duct friction design band</td><td>0.8 – 1.2 Pa/m</td></tr>
+      <tr><td>Pipe gradient design band</td><td>100 – 350 Pa/m</td></tr>
+      <tr><td>Coil face velocity</td><td>2.0 – 2.5 m/s (carryover &gt; 2.75)</td></tr>
+      <tr><td>Filter final Δp (G4/F7)</td><td>≈ 250 / 450 Pa typical allowance</td></tr>
+      <tr><td>Human sensible/latent (office)</td><td>≈ 70 W / 45 W per person</td></tr>
+      <tr><td>CO₂ proxy for 62.1 rates</td><td>≈ 700 ppm above outdoors at steady state</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3D VIEWER ============ -->
+<section class="tool" id="tool-viz3d">
+  <div class="toolhead"><h2>3D System Viewer</h2><p>I built this because clients — and, honestly, junior engineers — don't read duct schedules, they read pictures. It's a live plant room driven by your own numbers, not a render I baked earlier: the duct run rebuilds at the size, shape and velocity from your Duct Sizer, the chilled-water pair and pump follow your Pipe Hydraulics selection, and the flow particles move at the velocities you calculated. Drag to orbit, scroll to zoom, go and stand in it.</p></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Play with it</h3>
+      <div class="tglrow"><div>Airflow particles<small>Speed follows your duct velocity — fast air looks fast</small></div><button class="tgl on" id="tglAir">ON</button></div>
+      <div class="tglrow"><div>Water flow particles<small>Speed follows your pipe velocity</small></div><button class="tgl on" id="tglWater">ON</button></div>
+      <div class="tglrow"><div>Auto-rotate<small>Slow turntable — good for showing a client</small></div><button class="tgl" id="tglRotate">OFF</button></div>
+      <div class="tglrow"><div>X-ray plant<small>See through the AHU &amp; duct casing</small></div><button class="tgl" id="tglXray">OFF</button></div>
+      <h3 style="margin-top:18px">Stand here instead</h3>
+      <div class="viewrow" id="viewRow">
+        <button class="tgl on" data-view="persp">Perspective</button>
+        <button class="tgl" data-view="front">Front</button>
+        <button class="tgl" data-view="top">Top</button>
+        <button class="tgl" data-view="end">End</button>
+      </div>
+      <div class="formula"><b>Wired straight to your calcs</b><br>Duct section &amp; velocity ← <b>Duct Sizer</b><br>Pipe bore &amp; velocity ← <b>Pipe Hydraulics</b><br>Change a number over there — this room rebuilds itself.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+        <button class="go3d" data-go="duct" style="background:var(--panel);color:var(--ink);border-color:var(--line)">Edit duct inputs <span>↗</span></button>
+        <button class="go3d" data-go="pipe" style="background:var(--panel);color:var(--ink);border-color:var(--line)">Edit pipe inputs <span>↗</span></button>
+      </div>
+    </div>
+    <div>
+      <div class="viz" style="padding:14px">
+        <h3>My reference plant room — AHU · supply duct · CHW pump &amp; pipework</h3>
+        <div class="glwrap" id="glWrap">
+          <div class="glfallback" id="glFallback">Warming up the 3D engine…<br>If the room doesn't appear, your network has blocked the Three.js CDN — frustrating, but I built it so every calculator still works perfectly in 2D.</div>
+          <div class="glchips">
+            <span class="glchip">DUCT <b id="chipDuct">—</b></span>
+            <span class="glchip">AIR <b id="chipAir">—</b></span>
+            <span class="glchip">PIPE <b id="chipPipe">—</b></span>
+            <span class="glchip">WATER <b id="chipWater">—</b></span>
+          </div>
+          <div class="glhint">DRAG orbit · SCROLL zoom</div>
+        </div>
+      </div>
+      <p class="foot"><b>How to read my room:</b> the orange-ringed section is the fan, the fat casing mid-run is a VAV box, and the run drops through a 90° elbow to a ceiling diffuser. Duct and pipe <b>cross-sections are true to your calculated sizes</b> — but I shortened the runs so the whole room fits on your screen, so take pressure drops from the calculators, never from the picture. Particle speed is proportional to the real velocity in each system.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const F=(n,d=2)=>Number(n).toLocaleString("en-GB",{maximumFractionDigits:d,minimumFractionDigits:0});
+const F2=(n,d=2)=>Number(n).toLocaleString("en-GB",{maximumFractionDigits:d,minimumFractionDigits:d});
+function val(id,def){const e=$(id);if(!e)return def;let v=parseFloat(e.value);if(!isFinite(v))return def;const mn=parseFloat(e.min),mx=parseFloat(e.max);if(isFinite(mn)&&v<mn)v=mn;if(isFinite(mx)&&v>mx)v=mx;return v;}
+function on(ids,fn){ids.forEach(id=>{const e=$(id);if(e)e.addEventListener("input",fn);});}
+
+/* ---------- navigation ---------- */
+const TOOLS={home:"Overview",viz3d:"3D System Viewer",duct:"Duct Sizer",psych:"Psychrometrics",vent:"Ventilation 62.1",fan:"Fan Laws & Power",pipe:"Pipe Hydraulics",water:"Water & Coil Loads",load:"Room Load Estimator",conv:"Unit Converter",ref:"Properties & Data"};
+function showTool(name){
+  document.querySelectorAll(".tool").forEach(s=>s.classList.toggle("active",s.id==="tool-"+name));
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.tool===name));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".navbtn").forEach(b=>b.addEventListener("click",()=>showTool(b.dataset.tool)));
+const TOOL_DESC={viz3d:"My plant room, live — AHU, duct run and CHW pipework rebuilt from your own Duct Sizer and Pipe Hydraulics numbers, particles moving at your velocities.",duct:"The duct sizer I reach for first — velocity, Pa/m, total drop, and it works backwards from a friction rate when you ask it to.",psych:"The one chart worth learning properly. Full moist-air state from any two properties, plotted live, plus process loads.",vent:"Fresh air without the meeting-room argument: ASHRAE 62.1 breathing-zone rates, Vbz = Rp\u00b7Pz + Ra\u00b7Az, corrected for Ez.",fan:"The cube law, weaponised — what a speed change really does to flow, pressure, power and the annual bill.",pipe:"Pump head done properly: Darcy\u2013Weisbach cross-checked against Hazen\u2013Williams, on true internal diameter, always.",water:"Q = \u1e41\u00b7cp\u00b7\u0394T for water and glycols, coil duty off real psych states, and COP \u2194 EER \u2194 kW/ton translated.",load:"My paper method, digitised — sensible + latent build-up, every gain editable, nothing hidden in an allowance.",conv:"For US datasheets, European catalogues and gauges in inches of water — exact factors, the units this trade actually meets.",ref:"The grease-stained pages everything above stands on — water, dry air, Schedule 40 and my quick-checks."};
+$("homeCards").innerHTML=Object.keys(TOOLS).filter(k=>k!=="home").map(k=>{
+  const b=document.querySelector('.navbtn[data-tool="'+k+'"]');
+  return '<button class="tcard" data-go="'+k+'"><div class="dot" style="background:'+(b.querySelector(".dot").style.background)+'"></div><div><h3>'+TOOLS[k]+'</h3><p>'+(TOOL_DESC[k]||"")+'</p><div class="go">Fire it up</div></div></button>';
+}).join("");
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>showTool(b.dataset.go)));
+$("toolSearch").addEventListener("input",e=>{
+  const q=e.target.value.toLowerCase().trim();
+  document.querySelectorAll(".navbtn").forEach(b=>{
+    const hay=(b.textContent+" "+(b.dataset.keys||"")).toLowerCase();
+    b.style.display=(!q||hay.includes(q))?"":"none";
+  });
+  if(q){const first=[...document.querySelectorAll(".navbtn")].find(b=>b.style.display!=="none"&&(b.textContent+" "+(b.dataset.keys||"")).toLowerCase().includes(q));}
+});
+
+/* ---------- shared physics ---------- */
+function airProps(T){ // dry air at 101.325 kPa, standard tables interpolated
+  const rho=101.325/(0.287042*(T+273.15));
+  const nu=(1.458e-6*Math.pow(T+273.15,1.5)/((T+273.15)+110.4))/rho; // Sutherland / rho
+  return {rho:rho,cp:1.006,nu:nu};
+}
+const WATER_T=[[0,999.8,4.217,1.787],[5,1000.0,4.202,1.519],[10,999.7,4.192,1.307],[15,999.1,4.186,1.139],[20,998.2,4.182,1.004],[25,997.0,4.180,0.893],[30,995.6,4.178,0.801],[40,992.2,4.179,0.658],[50,988.0,4.181,0.556],[60,983.2,4.185,0.475],[70,977.8,4.190,0.413],[80,971.8,4.197,0.365],[90,965.3,4.205,0.326],[100,958.4,4.216,0.294]];
+function waterProps(T){
+  T=Math.max(0,Math.min(100,T));
+  for(let i=0;i<WATER_T.length-1;i++){const a=WATER_T[i],b=WATER_T[i+1];
+    if(T>=a[0]&&T<=b[0]){const t=(T-a[0])/(b[0]-a[0]);return{rho:a[1]+t*(b[1]-a[1]),cp:a[2]+t*(b[2]-a[2]),nu:(a[3]+t*(b[3]-a[3]))*1e-6};}}
+  const l=WATER_T[WATER_T.length-1];return{rho:l[1],cp:l[2],nu:l[3]*1e-6};
+}
+function haaland(Re,epsD){ if(Re<=0)return 0.02; if(Re<2300)return 64/Re; return Math.pow(-1.8*Math.log10(Math.pow(epsD/3.7,1.11)+6.9/Re),-2); }
+function psat(T){ return 0.61121*Math.exp((18.678-T/234.5)*(T/(257.14+T))); } // kPa, Buck
+function psychState(T,rh,P){
+  const pws=psat(T), pw=rh*pws, W=0.621945*pw/Math.max(0.01,(P-pw));
+  const h=1.006*T+W*(2501+1.86*T);
+  const alpha=Math.log(Math.max(rh,0.001))+(17.625*T)/(243.04+T);
+  const dp=243.04*alpha/(17.625-alpha);
+  const wb=T*Math.atan(0.151977*Math.sqrt(rh*100+8.313659))+Math.atan(T+rh*100)-Math.atan(rh*100-1.676331)+0.00391838*Math.pow(rh*100,1.5)*Math.atan(0.023101*rh*100)-4.686035;
+  const v=0.287042*(T+273.15)*(1+1.607858*W)/((P)*(1+W))*(1+W); // simplifies below
+  const vol=0.287042*(T+273.15)*(1+1.607858*W)/P; // m3/kg dry air
+  const rho=(1+W)/vol;
+  return {T:T,rh:rh,W:W,h:h,dp:dp,wb:wb,pw:pw,pws:pws,vol:vol,rho:rho};
+}
+function rhFromWB(T,wb,P){ // invert Stull numerically
+  let lo=0.01,hi=1; for(let i=0;i<40;i++){const mid=(lo+hi)/2;const s=psychState(T,mid,P); if(s.wb<wb)lo=mid; else hi=mid;} return (lo+hi)/2;
+}
+function rhFromDP(T,dp,P){ return psat(dp)/psat(T); }
+
+/* ---------- DUCT ---------- */
+let ductShape="round";
+$("ductShape").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+  ductShape=b.dataset.v; $("ductShape").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+  $("ductRound").style.display=ductShape==="round"?"":"none"; $("ductRect").style.display=ductShape==="rect"?"":"none"; calcDuct();
+}));
+function ductCalc(Q,D,eps,T,L,K){
+  const ap=airProps(T), A=Math.PI*D*D/4, V=Q/A, Re=V*D/ap.nu, f=haaland(Re,eps/D);
+  const pv=0.5*ap.rho*V*V, rate=f*pv/D, straight=rate*L, fit=K*pv;
+  return {A:A,V:V,Re:Re,f:f,pv:pv,rate:rate,tot:straight+fit};
+}
+function calcDuct(){
+  const Q=val("dQ",2500)/1000, L=val("dL",25), K=val("dK",3.5), eps=parseFloat($("dMat").value)/1000, T=val("dT",20);
+  let De,A,label;
+  if(ductShape==="round"){ De=val("dD",630)/1000; A=Math.PI*De*De/4; label="Ø "+F(De*1000,0)+" mm"; }
+  else{ const a=val("dW",800)/1000,b=val("dH",300)/1000; A=a*b; De=1.30*Math.pow(a*b,0.625)/Math.pow(a+b,0.25); label=F(a*1000,0)+" × "+F(b*1000,0)+" mm"; }
+  const r=ductCalc(Q,De,eps,T,L,K);
+  $("dTot").innerHTML=F(r.tot,0)+" <small>Pa</small>";
+  $("dTotSub").textContent="over "+F(L,0)+" m + Σζ "+F(K,1)+" · "+label;
+  $("dVel").innerHTML=F(r.V,2)+" <small>m/s</small>"; $("dVelSub").textContent=F(Q*1000*2.11888,0)+" cfm";
+  $("dFric").innerHTML=F(r.rate,3)+" <small>Pa/m</small>";
+  $("dPv").innerHTML=F(r.pv,1)+" <small>Pa</small>"; $("dReSub").textContent="Re "+F(r.Re,0)+" · f "+F2(r.f,4);
+  $("dDe").textContent=F(De*1000,0)+" mm"; $("dArea").textContent=F2(A,3)+" m²";
+  // reverse solve: find D giving target rate (bisection on diameter)
+  const target=val("dTarget",1.0); let lo=0.05,hi=3;
+  for(let i=0;i<50;i++){const mid=(lo+hi)/2; if(ductCalc(Q,mid,eps,T,1,0).rate>target) lo=mid; else hi=mid;}
+  const reqD=(lo+hi)/2, std=[100,125,160,200,250,315,400,500,630,800,1000,1250];
+  const nextStd=std.find(s=>s>=reqD*1000);
+  $("dReq").textContent="Ø "+F(reqD*1000,0)+" mm"; $("dReqSub").textContent=nextStd?("I'd order the next spiral up: Ø "+nextStd+" mm"):"above 1250 mm — go rectangular, spiral gets silly up there";
+  // verdicts
+  let v=[];
+  if(r.V<=4)v.push('<span class="pill ok">Nice and quiet — fine for branches and noise-sensitive rooms</span>');
+  else if(r.V<=7)v.push('<span class="pill ok">Right where I want a main duct</span>');
+  else if(r.V<=10)v.push('<span class="pill warn">Getting loud — check regenerated noise before you commit</span>');
+  else v.push('<span class="pill bad">Over 10 m/s — it will howl and the fan will pay for it</span>');
+  if(r.rate>=0.8&&r.rate<=1.2)v.push('<span class="pill ok">Friction rate in my 0.8–1.2 Pa/m design band</span>');
+  else if(r.rate<0.8)v.push('<span class="pill info">Below my band — duct may be oversized; cheap to run, dear to buy</span>');
+  else v.push('<span class="pill warn">Above 1.2 Pa/m — your fan energy bill will feel this for 20 years</span>');
+  $("dVerdict").innerHTML=v.join("");
+  // viz
+  let shape;
+  if(ductShape==="round"){const d=Math.min(De*1000*0.55,132); shape='<circle cx="170" cy="78" r="'+(d/2)+'" fill="color-mix(in srgb,var(--air) 10%,transparent)" stroke="var(--air)" stroke-width="3"/>';}
+  else{const sc=Math.min(300/val("dW",800),132/val("dH",300),0.55); const w=val("dW",800)*sc,h=val("dH",300)*sc; shape='<rect x="'+(170-w/2)+'" y="'+(78-h/2)+'" width="'+w+'" height="'+h+'" rx="6" fill="color-mix(in srgb,var(--air) 10%,transparent)" stroke="var(--air)" stroke-width="3"/>';}
+  $("dViz").innerHTML='<svg viewBox="0 0 340 170" role="img" aria-label="Duct section">'+shape+'<text x="170" y="162" text-anchor="middle" font-size="12" fill="var(--muted)" font-family="JetBrains Mono">'+label+' · '+F(r.V,1)+' m/s · '+F(r.rate,2)+' Pa/m</text></svg>';
+  // standard sizes table
+  $("dTable").innerHTML=std.filter(s=>s>=160&&s<=1000).map(s=>{
+    const rr=ductCalc(Q,s/1000,eps,T,1,0);
+    const verdict=rr.V>10?"Too fast — it'll howl":rr.V>=3?"I'd use it":rr.rate<0.3?"Oversized":"I'd use it";
+    const hl=Math.abs(s-Math.round(De*1000))<1&&ductShape==="round";
+    return '<tr'+(hl?' class="hl"':'')+'><td>Ø '+s+'</td><td>'+F(rr.V,2)+'</td><td>'+F(rr.rate,3)+'</td><td>'+verdict+'</td></tr>';
+  }).join("");
+}
+on(["dQ","dD","dW","dH","dL","dK","dT","dTarget"],calcDuct); $("dMat").addEventListener("change",calcDuct);
+
+/* ---------- PSYCH ---------- */
+let pMode="rh";
+$("pMode").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+  pMode=b.dataset.v; $("pMode").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+  $("pSecondLabel").innerHTML=pMode==="rh"?'Relative humidity <span class="unit">%</span>':pMode==="wb"?'Wet-bulb temperature <span class="unit">°C</span>':'Dew point <span class="unit">°C</span>';
+  if(pMode==="rh")$("pSecond").value=50; if(pMode==="wb")$("pSecond").value=19; if(pMode==="dp")$("pSecond").value=15;
+  calcPsych();
+}));
+function calcPsych(){
+  const T=val("pT",26), P=val("pP",101.325), s2=val("pSecond",50);
+  let rh; if(pMode==="rh")rh=Math.min(100,Math.max(1,s2))/100; else if(pMode==="wb")rh=rhFromWB(T,s2,P); else rh=Math.min(1,rhFromDP(T,s2,P));
+  const st=psychState(T,rh,P);
+  $("pH").innerHTML=F(st.h,1)+" <small>kJ/kg</small>";
+  $("pW").innerHTML=F(st.W*1000,2)+" <small>g/kg</small>";
+  $("pDP").innerHTML=F(st.dp,1)+" <small>°C</small>";
+  $("pWB").innerHTML=F(st.wb,1)+" <small>°C</small>";
+  $("pRho").innerHTML=F(st.rho,3)+" <small>kg/m³</small>";
+  $("pVol").textContent="specific volume "+F(st.vol,3)+" m³/kg da";
+  $("pPv").innerHTML=F(st.pw,2)+" <small>kPa</small>";
+  $("pRhOut").textContent="RH "+F(st.rh*100,1)+" % · saturation "+F(st.pws,2)+" kPa";
+  // process load
+  const T2=val("pT2",13), st2=psychState(T2,Math.min(100,Math.max(1,val("pRH2",90)))/100,P);
+  const Q=val("pQ",1000)/1000, mda=Q/st.vol; // kg da/s approx using entering specific volume
+  const tot=mda*(st2.h-st.h), sens=mda*1.006*(T2-T)+mda*st.W*1.86*(T2-T), lat=tot-sens;
+  $("pLoadTot").textContent=F(tot,1)+" kW"; $("pLoadS").textContent=F(sens,1)+" kW"; $("pLoadL").textContent=F(lat,1)+" kW";
+  $("pSHR").textContent=tot!==0?F2(Math.abs(sens/tot),2):"—";
+  drawPsych(st,P);
+}
+function drawPsych(st,P){
+  const W=640,H=340,pl=46,pb=34,pt=12,pr=14, xmax=50, ymax=0.030;
+  const X=t=>pl+(t/xmax)*(W-pl-pr), Y=w=>H-pb-(w/ymax)*(H-pb-pt);
+  let paths="";
+  // saturation + RH curves
+  [1,0.8,0.6,0.4,0.2].forEach(rh=>{
+    let d=""; for(let t=0;t<=50;t+=1){const s=psychState(t,rh,P); d+=(t===0?"M":"L")+X(t).toFixed(1)+","+Y(Math.min(s.W,ymax)).toFixed(1)+" ";}
+    paths+='<path d="'+d+'" fill="none" stroke="'+(rh===1?"var(--air)":"var(--line)")+'" stroke-width="'+(rh===1?2:1)+'"/><text x="'+(X(50)+2)+'" y="'+(Y(psychState(50,rh,P).W)+3)+'" font-size="9" fill="var(--muted)">'+(rh*100)+'%</text>';
+  });
+  // enthalpy lines
+  for(let h=10;h<=110;h+=20){ let d=""; let started=false;
+    for(let t=0;t<=50;t+=0.5){ const w=(h-1.006*t)/(2501+1.86*t); if(w<0||w>ymax)continue; d+=(started?"L":"M")+X(t).toFixed(1)+","+Y(w).toFixed(1)+" "; started=true; }
+    if(d)paths+='<path d="'+d+'" fill="none" stroke="var(--line)" stroke-dasharray="3 4" stroke-width="1"/>';
+  }
+  let grid=""; for(let t=0;t<=50;t+=10){grid+='<line x1="'+X(t)+'" y1="'+pt+'" x2="'+X(t)+'" y2="'+(H-pb)+'" stroke="var(--line)" stroke-width="0.5"/><text x="'+X(t)+'" y="'+(H-pb+16)+'" font-size="10" text-anchor="middle" fill="var(--muted)">'+t+'</text>';}
+  for(let w=0;w<=0.0301;w+=0.005){grid+='<line x1="'+pl+'" y1="'+Y(w)+'" x2="'+(W-pr)+'" y2="'+Y(w)+'" stroke="var(--line)" stroke-width="0.5"/><text x="'+(pl-5)+'" y="'+(Y(w)+3)+'" font-size="10" text-anchor="end" fill="var(--muted)">'+F(w*1000,0)+'</text>';}
+  $("pChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Psychrometric chart">'+grid+paths+
+    '<circle cx="'+X(st.T)+'" cy="'+Y(st.W)+'" r="6" fill="var(--accent)" stroke="var(--panel)" stroke-width="2"/>'+
+    '<text x="'+(X(st.T)+10)+'" y="'+(Y(st.W)-8)+'" font-size="12" font-weight="600" fill="var(--ink)">'+F(st.T,1)+' °C · '+F(st.rh*100,0)+' % RH</text>'+
+    '<text x="'+(W/2)+'" y="'+(H-2)+'" font-size="11" text-anchor="middle" fill="var(--muted)">Dry-bulb temperature °C</text>'+
+    '<text x="12" y="'+(H/2)+'" font-size="11" text-anchor="middle" fill="var(--muted)" transform="rotate(-90 12 '+(H/2)+')">Humidity ratio g/kg dry air</text></svg>';
+}
+on(["pT","pSecond","pP","pQ","pT2","pRH2"],calcPsych);
+
+/* ---------- VENTILATION ---------- */
+const SPACES=[
+ ["Office space",2.5,0.3,50],["Conference / meeting",2.5,0.3,50],["Reception / lobby",2.5,0.3,30],
+ ["Classroom (age 9+)",5.0,0.6,35],["Lecture hall",3.8,0.3,150],["Computer lab",5.0,0.6,25],
+ ["Retail sales",3.8,0.6,15],["Supermarket",3.8,0.9,8],["Restaurant dining",3.8,0.9,10],
+ ["Cafeteria",3.8,0.9,10],["Bar / cocktail lounge",3.8,0.9,10],["Hotel bedroom",2.5,0.3,20],
+ ["Dormitory sleeping",2.5,0.3,20],["Hospital patient room",5.0,0.6,10],["Operating / procedure room",10.0,0.9,5],
+ ["Gym / sports arena (floor)",10.0,0.6,7],["Health club aerobics",10.0,0.6,15],["Library",2.5,0.6,10],
+ ["Museum / gallery",3.8,0.6,10],["Theatre / auditorium",2.5,0.3,150],["Place of worship",2.5,0.3,120],
+ ["Warehouse / storage",1.5,0.15,0],["Workshop / manufacturing",5.0,0.9,0],["Laboratory (science)",5.0,0.9,0],
+ ["Swimming pool (pool + deck)",0,2.4,0],["Corridor",0,0.3,0],["Toilet — public (per WC/urinal, exhaust basis)",0,0,0]
+];
+$("vType").innerHTML=SPACES.map((s,i)=>'<option value="'+i+'">'+s[0]+'</option>').join("");
+$("vTable").innerHTML=SPACES.filter(s=>s[3]>0).slice(0,10).map(s=>{
+  const perPerson=s[1]+s[2]*1000/s[3]; return '<tr><td>'+s[0]+'</td><td>'+F2(s[1],1)+'</td><td>'+F2(s[2],2)+'</td><td>'+s[3]+' /1000m²</td><td>'+F(perPerson,1)+' L/s·p</td></tr>';
+}).join("");
+function ventSyncType(){ const s=SPACES[val("vType",0)]; $("vRp").value=s[1]; $("vRa").value=s[2]; $("vDensity").textContent=s[3]?("Table 6.1 default occupancy: "+s[3]+" people / 1000 m²"+(s[3]&&$("vA")?(" → suggested Pz ≈ "+Math.max(1,Math.round(val("vA",120)*s[3]/1000))):"")):"No default density — enter actual occupants."; calcVent(); }
+function calcVent(){
+  const A=val("vA",120),Pz=val("vP",12),Rp=val("vRp",2.5),Ra=val("vRa",0.3),Ez=parseFloat($("vEz").value),vol=val("vVol",360);
+  const people=Rp*Pz, area=Ra*A, vbz=people+area, voz=vbz/Ez;
+  $("vVoz").innerHTML=F(voz,0)+" <small>L/s</small>"; $("vVozSub").textContent=F(voz*2.11888,0)+" cfm · "+F(voz/1000,3)+" m³/s";
+  $("vVbz").innerHTML=F(vbz,0)+" <small>L/s</small>";
+  $("vPer").innerHTML=Pz>0?F(voz/Pz,1)+" <small>L/s·p</small>":"—";
+  $("vPerM").innerHTML=F(voz/A,2)+" <small>L/s·m²</small>";
+  $("vACH").innerHTML=F(voz/1000*3600/vol,2)+" <small>ach</small>";
+  $("vPeople").textContent=F(people,0)+" L/s people"; $("vAreaSub").textContent=F(area,0)+" L/s building (area)";
+  const tot=Math.max(1,vbz);
+  $("vBar").innerHTML='<svg viewBox="0 0 640 74" role="img" aria-label="Ventilation split"><rect x="0" y="10" width="'+(640*people/tot)+'" height="30" rx="5" fill="var(--air)"/><rect x="'+(640*people/tot)+'" y="10" width="'+(640*area/tot)+'" height="30" rx="5" fill="var(--thermal)"/><text x="4" y="60" font-size="12" fill="var(--muted)">People Rp·Pz — '+F(people/tot*100,0)+'%</text><text x="636" y="60" font-size="12" text-anchor="end" fill="var(--muted)">Building Ra·Az — '+F(area/tot*100,0)+'%</text></svg>';
+}
+$("vType").addEventListener("change",ventSyncType); $("vEz").addEventListener("change",calcVent);
+on(["vA","vP","vRp","vRa","vVol"],calcVent);
+
+/* ---------- PIPE ---------- */
+const PIPES=[["DN15 · ½″",21.3,16.0],["DN20 · ¾″",26.9,21.6],["DN25 · 1″",33.7,27.3],["DN32 · 1¼″",42.4,35.9],["DN40 · 1½″",48.3,41.9],["DN50 · 2″",60.3,53.1],["DN65 · 2½″",76.1,68.8],["DN80 · 3″",88.9,80.9],["DN100 · 4″",114.3,105.3],["DN125 · 5″",139.7,130.0],["DN150 · 6″",168.3,157.1],["DN200 · 8″",219.1,206.5],["DN250 · 10″",273.0,259.4],["DN300 · 12″",323.9,308.0]];
+$("wSize").innerHTML=PIPES.map((p,i)=>'<option value="'+i+'">'+p[0]+' — ID '+p[2]+' mm</option>').join("");
+$("wSize").value="8";
+function pipeCalc(Q,D,eps,T,L,K,matC){
+  const wp=waterProps(T), A=Math.PI*D*D/4, V=Q/A, Re=V*D/wp.nu, f=haaland(Re,eps/D);
+  const rate=f*(1/D)*0.5*wp.rho*V*V; // Pa/m
+  const hw=10.67*wp.rho*9.81*Math.pow(Q,1.852)/(Math.pow(matC,1.852)*Math.pow(D,4.87))/1000; // kPa/m? -> Pa/m below
+  return {wp:wp,A:A,V:V,Re:Re,f:f,rate:rate,hwRate:10.67*Math.pow(Q,1.852)/(Math.pow(matC,1.852)*Math.pow(D,4.87))}; // H-W in m head/m
+}
+function calcPipe(){
+  const Q=val("wQ",8)/1000, sel=PIPES[val("wSize",8)], epsMm=parseFloat($("wMat").value);
+  const Cmap={"0.045":130,"0.0015":140,"0.007":150,"0.26":100}; const C=Cmap[$("wMat").value]||130;
+  const custom=val("wD",0); const D=(custom>0?custom:sel[2])/1000;
+  $("wIdHint").textContent="Designing on ID = "+F(D*1000,1)+" mm ("+sel[0]+", Sch 40)"+(custom>0?" — custom ID in use":"");
+  const T=val("wT",10),L=val("wL",60),K=val("wK",12),stat=val("wStatic",0),eff=Math.max(5,val("wEff",70))/100;
+  const r=pipeCalc(Q,D,epsMm/1000,T,L,K,C);
+  const straight=r.rate*L, fit=K*0.5*r.wp.rho*r.V*r.V, totPa=straight+fit, head=totPa/(r.wp.rho*9.81)+stat;
+  const pow=r.wp.rho*9.81*Q*head/eff/1000;
+  $("wHead").innerHTML=F(head,1)+" <small>m</small>"; $("wHeadSub").textContent=F(totPa/1000,1)+" kPa friction + "+F(stat,1)+" m static";
+  $("wVel").innerHTML=F(r.V,2)+" <small>m/s</small>"; $("wVelSub").textContent=F(Q*1000*15.85,1)+" US gpm";
+  $("wRate").innerHTML=F(r.rate*100/1000,1)+" <small>kPa</small>"; 
+  $("wPow").innerHTML=F(pow,2)+" <small>kW</small>"; $("wPowSub").textContent="at η "+F(eff*100,0)+"% · hydraulic "+F(r.wp.rho*9.81*Q*head/1000,2)+" kW";
+  $("wRe").textContent=F(r.Re,0); $("wFlowRegime").textContent=r.Re>10000?"fully turbulent":r.Re>4000?"transitional–turbulent":r.Re>2300?"transitional":"laminar";
+  const hwStraight=r.hwRate*L; $("wHW").textContent=F(hwStraight,1)+" m ("+F(hwStraight*r.wp.rho*9.81/1000,0)+" kPa)";
+  let v=[];
+  if(r.V<0.9)v.push('<span class="pill warn">Slow — air will hang about and dirt will settle; is this oversized?</span>');
+  else if(r.V<=2.4)v.push('<span class="pill ok">In my 0.9–2.4 m/s band — quiet, no erosion worries</span>');
+  else if(r.V<=3)v.push('<span class="pill warn">Brisk — watch noise and erosion on bends</span>');
+  else v.push('<span class="pill bad">Over 3 m/s — go up a size, your ears and the pipe will thank you</span>');
+  const rateKpa=r.rate/1000*1000; // Pa/m
+  if(r.rate>=100&&r.rate<=350)v.push('<span class="pill ok">Gradient in the 100–350 Pa/m band I call economic</span>');
+  else if(r.rate>350)v.push('<span class="pill warn">Over 350 Pa/m — the pump pays for this every hour it runs</span>');
+  else v.push('<span class="pill info">Under 100 Pa/m — generous; lovely to run, check the pipe cost</span>');
+  $("wVerdict").innerHTML=v.join("");
+  $("wTable").innerHTML=PIPES.map((p,idx)=>{
+    if(Math.abs(idx-val("wSize",8))>2)return "";
+    const rr=pipeCalc(Q,p[2]/1000,epsMm/1000,T,1,0,C);
+    const verdict=rr.V>3?"Too fast":rr.V<0.5?"Very slow":(rr.rate>400?"High Δp":"I'd use it");
+    return '<tr'+(idx===val("wSize",8)&&!(custom>0)?' class="hl"':'')+'><td>'+p[0]+'</td><td>'+F(p[2],1)+'</td><td>'+F(rr.V,2)+'</td><td>'+F(rr.rate*100/1000,1)+'</td><td>'+verdict+'</td></tr>';
+  }).join("");
+}
+$("wSize").addEventListener("change",calcPipe); $("wMat").addEventListener("change",calcPipe);
+on(["wQ","wD","wL","wT","wK","wStatic","wEff"],calcPipe);
+
+/* ---------- WATER & COIL ---------- */
+function calcWater(){
+  const load=val("cLoad",120), tf=val("cTF",6), tr=val("cTR",12), dT=Math.abs(tr-tf);
+  const flu=$("cFluid").value; let rho=waterProps((tf+tr)/2).rho, cp=waterProps((tf+tr)/2).cp;
+  if(flu==="20"){rho=1030;cp=3.95;} if(flu==="35"){rho=1050;cp=3.72;} if(flu==="e35"){rho=1065;cp=3.55;}
+  const mdot=load/(cp*Math.max(dT,0.1)), flow=mdot/rho*1000;
+  $("cFlow").innerHTML=F(flow,2)+" <small>L/s</small>"; $("cFlowSub").textContent=F(flow*15.85,1)+" US gpm · "+F(flow*3.6,1)+" m³/h";
+  $("cTons").innerHTML=F(load/3.51685,1)+" <small>TR</small>";
+  $("cMass").innerHTML=F(mdot,2)+" <small>kg/s</small>";
+  $("cDT").innerHTML=F(dT,1)+" <small>K</small>";
+  $("cDTsub").textContent=flu==="0"?"water properties at mean temp":"glycol — derate coil & pump accordingly";
+  $("cVerdict").innerHTML= dT>=5.5?'<span class="pill ok">Healthy ΔT — at or above the 5.5 K I design to</span>':dT>=4?'<span class="pill warn">ΔT slipping below 5 K — this is how low-ΔT syndrome starts; check flow &amp; pump energy</span>':'<span class="pill bad">ΔT under 4 K — you are pushing ' + F(6/Math.max(dT,0.1),1) + '× the 6 K design flow for the same load. Find out why.</span>';
+  // chiller
+  const cap=val("cCap",350), pin=Math.max(1,val("cPin",62)), cop=cap/pin;
+  $("cCOP").textContent=F(cop,2); $("cEER").textContent=F(cop*3.412,1); $("cKwTon").textContent=F(3.51685/cop,3);
+  $("cCapOut").textContent=F(cap/3.51685,0)+" TR";
+  // coil
+  const e=psychState(val("cE1",26),val("cE2",50)/100,101.325), l=psychState(val("cL1",12.5),val("cL2",92)/100,101.325);
+  const Qa=val("cAir",4000)/1000, mda=Qa/e.vol;
+  const tot=mda*(e.h-l.h), sens=mda*(1.006+e.W*1.86)*(e.T-l.T), lat=tot-sens, cond=mda*(e.W-l.W)*3600;
+  $("cCoilT").textContent=F(tot,0)+" kW"; $("cCoilS").textContent=F(sens,0)+" kW"; $("cCoilL").textContent=F(lat,0)+" kW"; $("cCond").textContent=F(Math.max(0,cond),1)+" L/h";
+}
+$("cFluid").addEventListener("change",calcWater);
+on(["cLoad","cTF","cTR","cCap","cPin","cE1","cE2","cL1","cL2","cAir"],calcWater);
+
+/* ---------- FAN ---------- */
+function calcFan(){
+  const Q1=val("fQ1",5000),P1=val("fP1",650),N1=Math.max(1,val("fN1",1450)),N2=val("fN2",1160),eff=Math.max(5,val("fEff",68))/100;
+  const hrs=val("fHrs",3000), price=val("fPrice",0.22), r=N2/N1;
+  const Q2=Q1*r,P2=P1*r*r, air1=Q1/1000*P1/1000, shaft1=air1/eff, shaft2=shaft1*Math.pow(r,3);
+  $("fPow2").innerHTML=F(shaft2,2)+" <small>kW</small>"; $("fPow2Sub").textContent="speed ratio "+F(r,3)+" · cube factor "+F(Math.pow(r,3),3);
+  $("fQ2").innerHTML=F(Q2,0)+" <small>L/s</small>"; $("fP2").innerHTML=F(P2,0)+" <small>Pa</small>";
+  $("fPow1").innerHTML=F(shaft1,2)+" <small>kW</small>"; $("fPow1").nextElementSibling; document.querySelector("#tool-fan .stat:nth-child(4) .sub");
+  $("fE1").textContent=F(shaft1*hrs,0); $("fE2").textContent=F(shaft2*hrs,0);
+  const save=(shaft1-shaft2)*hrs; $("fSave").textContent=F(save,0)+" kWh"; $("fSaveSub").textContent="≈ "+F(save*price,0)+" currency units / year at "+F(price,2)+"/kWh";
+  // chart: power vs speed ratio 0.4–1.1
+  let d=""; const Wd=640,Hh=170,pl=44,pb=24,pt=10;
+  const X=x=>pl+(x-0.4)/0.7*(Wd-pl-10), Y=y=>Hh-pb-(y/1.35)*(Hh-pb-pt);
+  for(let x=0.4;x<=1.101;x+=0.02){ d+=(x===0.4?"M":"L")+X(x).toFixed(1)+","+Y(Math.pow(x,3)).toFixed(1)+" "; }
+  $("fChart").innerHTML='<svg viewBox="0 0 '+Wd+' '+Hh+'" role="img" aria-label="Cube law chart"><line x1="'+pl+'" y1="'+(Hh-pb)+'" x2="'+(Wd-10)+'" y2="'+(Hh-pb)+'" stroke="var(--line)"/><line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(Hh-pb)+'" stroke="var(--line)"/><path d="'+d+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/><circle cx="'+X(r)+'" cy="'+Y(Math.pow(r,3))+'" r="5" fill="var(--accent)"/><text x="'+(X(r)+8)+'" y="'+(Y(Math.pow(r,3))-6)+'" font-size="12" font-weight="600" fill="var(--ink)">'+F(Math.pow(r,3)*100,0)+'% power at '+F(r*100,0)+'% speed</text><text x="'+(Wd/2)+'" y="'+(Hh-4)+'" font-size="11" text-anchor="middle" fill="var(--muted)">Speed ratio N₂/N₁</text></svg>';
+}
+on(["fQ1","fP1","fN1","fN2","fEff","fHrs","fPrice"],calcFan);
+
+/* ---------- LOAD ---------- */
+function calcLoad(){
+  const A=val("lA",150), OT=val("lOT",35), IT=val("lIT",23), dT=OT-IT;
+  const eO=psychState(OT,val("lORH",45)/100,101.325), eI=psychState(IT,val("lIRH",50)/100,101.325);
+  const wall=val("lWall",90)*val("lUW",0.35)*dT/1000, other=val("lUA",25)*dT/1000;
+  const solar=val("lGl",30)*val("lSHGC",0.35)*val("lSol",450)/1000;
+  const glassCond=val("lGl",30)*2.8*dT/1000; // typical glazing U 2.8 — conduction only, labeled in breakdown
+  const pplS=val("lPpl",15)*val("lPs",70)/1000, pplL=val("lPpl",15)*val("lPl",45)/1000;
+  const light=val("lLight",8)*A/1000, equip=val("lEq",15)*A/1000;
+  const vol=A*val("lHgt",3), infQ=val("lInf",0.3)*vol/3600; // m3/s
+  const rhoI=eI.rho, infS=rhoI*infQ*1.006*dT, infTot=rhoI*infQ*(eO.h-eI.h), infL=infTot-infS;
+  const faQ=val("lFA",180)/1000, mdaFA=faQ/eO.vol, faTot=mdaFA*(eO.h-eI.h), faS=mdaFA*1.006*dT, faL=faTot-faS;
+  const sf=val("lSF",1.1);
+  const comps=[
+    ["Envelope (walls + roof)",wall+other,"var(--thermal)"],
+    ["Glazing conduction",glassCond,"var(--thermal)"],
+    ["Solar through glazing",solar,"var(--thermal)"],
+    ["Occupants — sensible",pplS,"var(--air)"],["Occupants — latent",pplL,"var(--air)"],
+    ["Lighting",light,"var(--power)"],["Equipment",equip,"var(--power)"],
+    ["Infiltration — sensible",infS,"var(--water)"],["Infiltration — latent",Math.max(0,infL),"var(--water)"],
+    ["Fresh air — sensible",faS,"var(--air)"],["Fresh air — latent",Math.max(0,faL),"var(--air)"]
+  ];
+  const sens=(wall+other+glassCond+solar+pplS+light+equip+infS+faS), lat=(pplL+Math.max(0,infL)+Math.max(0,faL));
+  const tot=(sens+lat)*sf;
+  $("lTot").innerHTML=F(tot,1)+" <small>kW</small>"; $("lTotSub").textContent=F(tot/3.51685,1)+" TR · incl. ×"+F(sf,2)+" factor";
+  $("lSens").innerHTML=F(sens*sf,1)+" <small>kW</small>"; $("lLat").innerHTML=F(lat*sf,1)+" <small>kW</small>";
+  $("lWm").innerHTML=F(tot*1000/A,0)+" <small>W/m²</small>"; $("lSHR").textContent="room SHR "+F2(sens/(sens+lat),2);
+  const max=Math.max(...comps.map(c=>c[1]),0.01);
+  $("lBars").innerHTML=comps.map(c=>'<div style="display:grid;grid-template-columns:170px 1fr 74px;gap:10px;align-items:center;margin-bottom:7px;font-size:12.5px"><span>'+c[0]+'</span><div class="bar" style="margin:0"><i style="width:'+F(c[1]/max*100,1)+'%;background:'+c[2]+'"></i></div><span class="mono" style="text-align:right">'+F(c[1]*sf,2)+' kW</span></div>').join("");
+  const supplyDT=10, supplyQ=(sens*sf)/(1.2*1.006*supplyDT); // L/s approx rho 1.2
+  const chwFlow=(tot)/(4.19*6);
+  $("lImply").innerHTML=
+    "• <b>Supply air</b> to carry the sensible load at a 10 K supply ΔT: ≈ <b class='mono'>"+F(supplyQ*1000,0)+" L/s</b> ("+F(supplyQ*1000/A,1)+" L/s·m²). Put it next to your fresh-air quantity — whichever is bigger sizes your fan, and it's not always the one people guess.<br>"+
+    "• <b>CHW flow</b> at 6/12 °C for the whole load: ≈ <b class='mono'>"+F(chwFlow,2)+" L/s</b> — take that straight into the Pipe tool.<br>"+
+    "• <b>Your biggest enemy:</b> "+comps.slice().sort((a,b)=>b[1]-a[1])[0][0]+" at "+F(comps.slice().sort((a,b)=>b[1]-a[1])[0][1]*sf,1)+" kW. Attack this one first — shading, a better SHGC, or heat recovery on the fresh air — before you spend a penny upsizing plant.<br>"+
+    "• <b>Fresh-air share:</b> "+F((faS+Math.max(0,faL))*sf/tot*100,0)+"% of the total load. An 80 %-effective recovery ventilator would take most of that back — I spec one whenever this share scares me.";
+}
+on(["lA","lHgt","lOT","lORH","lIT","lIRH","lWall","lUW","lUA","lGl","lSHGC","lSol","lPpl","lPs","lPl","lLight","lEq","lInf","lFA","lSF"],calcLoad);
+
+/* ---------- CONVERTER ---------- */
+const CONV=[
+ ["Airflow",[["L/s",1],["m³/h",1/3.6],["m³/s",1000],["cfm",2.11888],["L/min",1/60]]],
+ ["Pressure",[["Pa",1],["kPa",1000],["mbar",100],["in w.g.",248.84],["mm w.g.",9.80665],["psi",6894.76]]],
+ ["Power / load",[["kW",1],["W",0.001],["BTU/h",0.000293071],["TR (tons)",3.51685],["hp",0.7457]]],
+ ["Flow — water",[["L/s",1],["m³/h",1/3.6],["US gpm",0.0630902],["Imp gpm",0.0757682],["L/min",1/60]]],
+ ["Velocity",[["m/s",1],["km/h",1/3.6],["fpm",0.00508],["mph",0.44704]]],
+ ["Length",[["mm",1],["m",1000],["inch",25.4],["ft",304.8]]]
+];
+$("convGroups").innerHTML=CONV.map((g,gi)=>'<div class="card"><h3>'+g[0]+'</h3>'+g[1].map((u,ui)=>'<div class="convrow"><input type="number" data-g="'+gi+'" data-u="'+ui+'" step="any"><span class="eq">=</span><span style="font-size:13px;color:var(--muted)">'+u[0]+'</span></div>').join("")+'</div>').join("");
+document.querySelectorAll("#convGroups input").forEach(inp=>{
+  inp.addEventListener("input",()=>{
+    const gi=+inp.dataset.g, ui=+inp.dataset.u, v=parseFloat(inp.value); if(!isFinite(v))return;
+    const base=v*CONV[gi][1][ui][1];
+    document.querySelectorAll('#convGroups input[data-g="'+gi+'"]').forEach(o=>{ if(o!==inp){const f=CONV[gi][1][+o.dataset.u][1]; o.value=+((base/f).toPrecision(6)); }});
+  });
+});
+// seed converter defaults
+(function(){ const seeds=[[0,0,1000],[1,0,500],[2,0,100],[3,0,10],[4,0,5],[5,0,500]];
+ seeds.forEach(s=>{const inp=document.querySelector('#convGroups input[data-g="'+s[0]+'"][data-u="'+s[1]+'"]'); if(inp){inp.value=s[2]; inp.dispatchEvent(new Event("input"));}});
+})();
+
+/* ---------- REFERENCE TABLES ---------- */
+$("refWater").innerHTML=WATER_T.filter((_,i)=>i%1===0).map(r=>'<tr><td>'+r[0]+'</td><td>'+F(r[1],1)+'</td><td>'+F(r[2],3)+'</td><td>'+F(r[3],3)+'</td></tr>').join("");
+$("refAir").innerHTML=[-10,0,10,20,30,40,50].map(t=>{const a=airProps(t); return '<tr><td>'+t+'</td><td>'+F(a.rho,3)+'</td><td>'+F(a.cp,3)+'</td><td>'+F(a.nu*1e6,2)+'</td></tr>';}).join("");
+$("refPipe").innerHTML=PIPES.map(p=>'<tr><td>'+p[0]+'</td><td>'+F(p[1],1)+'</td><td>'+F(p[2],1)+'</td><td>'+F(Math.PI*p[2]*p[2]/4/100,1)+'</td></tr>').join("");
+
+/* ---------- INPUT LIMITS — enforced by val() before any calculation ---------- */
+const LIMITS={dQ:[1,200000],dD:[50,3000],dW:[50,3000],dH:[50,3000],dL:[0,10000],dK:[0,100],dT:[-60,120],dTarget:[0.05,20],
+pT:[-60,120],pSecond:[-60,120],pP:[20,120],pQ:[0,1000000],pT2:[-60,120],pRH2:[0,100],
+vA:[1,100000],vP:[0,100000],vRp:[0,50],vRa:[0,20],vVol:[1,1000000],
+wQ:[0.01,10000],wD:[0,1000],wL:[0,100000],wT:[-20,150],wK:[0,500],wStatic:[-500,500],wEff:[5,100],
+cLoad:[0,100000],cTF:[-30,200],cTR:[-30,200],cCap:[0,1000000],cPin:[0,1000000],cE1:[-60,120],cE2:[0,100],cL1:[-60,120],cL2:[0,100],cAir:[0,1000000],
+fQ1:[0,1000000],fP1:[0,100000],fN1:[1,10000],fN2:[0,10000],fEff:[5,100],fHrs:[0,8760],fPrice:[0,100],
+lA:[1,100000],lHgt:[1,30],lOT:[-60,60],lORH:[0,100],lIT:[-60,60],lIRH:[0,100],lWall:[0,100000],lUW:[0,10],lUA:[0,100000],lGl:[0,100000],lSHGC:[0,1],lSol:[0,1500],lPpl:[0,100000],lPs:[0,1000],lPl:[0,1000],lLight:[0,200],lEq:[0,500],lInf:[0,20],lFA:[0,1000000],lSF:[0.5,3]};
+Object.keys(LIMITS).forEach(id=>{const e=$(id);if(e){e.min=LIMITS[id][0];e.max=LIMITS[id][1];}});
+
+/* ---------- init ---------- */
+calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); calcLoad();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+/* ---------- 3D SYSTEM VIEWER ---------- */
+(function(){
+  "use strict";
+  var inited=false, wrap=null, renderer=null, scene=null, camera=null;
+  var ductGroup=null, pipeGroup=null, ahuGroup=null;
+  var ductMat=null, ahuMat=null, ahuPanelMat=null, pipeFMat=null, pipeRMat=null;
+  var airPts=null, waterPts=null, airOff=[], waterOff=[];
+  var pathPts=[], cumLen=[], totalLen=0;
+  var cam={theta:0.72, phi:1.03, r:11.6, cx:-0.2, cy:1.25, cz:0.3};
+  var st={air:true, water:true, rotate:false, xray:false};
+  var lastKey="", lastSync=0, clock=null;
+  function el(id){return document.getElementById(id);}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function ductDims(){
+    if(typeof ductShape!=="undefined" && ductShape==="rect"){
+      return {shape:"rect", w:clamp(val("dW",800)/1000,0.15,1.4), h:clamp(val("dH",300)/1000,0.12,1.0)};
+    }
+    return {shape:"round", r:clamp(val("dD",630)/2000,0.09,0.55)};
+  }
+  function pipeD(){
+    var custom=val("wD",0);
+    if(custom>0) return clamp(custom/1000,0.02,0.6);
+    try{ var sel=PIPES[val("wSize",8)]; return sel[2]/1000; }catch(e){ return 0.1053; }
+  }
+  function syncKey(){
+    var d=ductDims();
+    return d.shape+"|"+(d.shape==="round"?d.r:d.w+"x"+d.h)+"|"+pipeD().toFixed(4);
+  }
+  function makeLabel(text,x,y,z,scale){
+    var c=document.createElement("canvas"); c.width=640; c.height=104;
+    var g=c.getContext("2d"); g.font="700 46px 'JetBrains Mono',monospace"; g.textAlign="center"; g.textBaseline="middle";
+    g.fillStyle="rgba(9,13,19,0.55)"; var w=g.measureText(text).width+44;
+    g.beginPath(); g.rect(320-w/2,14,w,76); g.fill();
+    g.fillStyle="#ff4d0d"; g.fillRect(320-w/2,14,6,76);
+    g.fillStyle="#eef1f5"; g.fillText(text,320,54);
+    var tex=new THREE.CanvasTexture(c);
+    var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));
+    sp.position.set(x,y,z); sp.scale.set(2.3*(scale||1),0.375*(scale||1),1);
+    return sp;
+  }
+  function buildStatic(){
+    var floor=new THREE.Mesh(new THREE.PlaneGeometry(17,11.5), new THREE.MeshStandardMaterial({color:0x11161f,roughness:1,metalness:0}));
+    floor.rotation.x=-Math.PI/2; floor.position.set(0,0,0.4); floor.receiveShadow=true; scene.add(floor);
+    var grid=new THREE.GridHelper(17,17,0x2b3648,0x1b2431); grid.position.set(0,0.012,0.4); scene.add(grid);
+    // AHU
+    ahuGroup=new THREE.Group();
+    ahuMat=new THREE.MeshStandardMaterial({color:0x39445a,roughness:0.55,metalness:0.35});
+    ahuPanelMat=new THREE.MeshStandardMaterial({color:0x2a3347,roughness:0.6,metalness:0.3});
+    var body=new THREE.Mesh(new THREE.BoxGeometry(2.0,2.4,1.5), ahuMat); body.position.set(0,1.4,0); body.castShadow=true; ahuGroup.add(body);
+    for(var i=0;i<3;i++){ var p=new THREE.Mesh(new THREE.BoxGeometry(0.56,2.06,0.04), ahuPanelMat); p.position.set(-0.64+i*0.64,1.4,0.77); ahuGroup.add(p); }
+    var stripe=new THREE.Mesh(new THREE.BoxGeometry(2.02,0.07,1.52), new THREE.MeshStandardMaterial({color:0xff4d0d,roughness:0.5}));
+    stripe.position.set(0,2.56,0); ahuGroup.add(stripe);
+    var fanDisc=new THREE.Mesh(new THREE.CircleGeometry(0.42,36), new THREE.MeshStandardMaterial({color:0x0c1017,roughness:0.4,metalness:0.4}));
+    fanDisc.position.set(0,1.4,0.795); ahuGroup.add(fanDisc);
+    var ring=new THREE.Mesh(new THREE.TorusGeometry(0.42,0.035,10,40), new THREE.MeshStandardMaterial({color:0xff4d0d,roughness:0.5}));
+    ring.position.set(0,1.4,0.795); ahuGroup.add(ring);
+    var plinth=new THREE.Mesh(new THREE.BoxGeometry(2.2,0.2,1.7), new THREE.MeshStandardMaterial({color:0x1a212e,roughness:0.9}));
+    plinth.position.set(0,0.1,0); ahuGroup.add(plinth);
+    ahuGroup.position.set(-4.2,0,0); scene.add(ahuGroup);
+    scene.add(makeLabel("AHU",-4.2,3.25,0,1));
+    scene.add(makeLabel("SUPPLY DUCT",-0.2,3.3,0,1));
+    scene.add(makeLabel("CHW PIPES",0.4,1.35,1.9,0.9));
+    scene.add(makeLabel("PUMP",-3.95,1.45,1.9,0.8));
+    // pump
+    var pump=new THREE.Group();
+    var pm=new THREE.MeshStandardMaterial({color:0x0d7a66,roughness:0.45,metalness:0.35});
+    var base=new THREE.Mesh(new THREE.BoxGeometry(0.85,0.16,0.7), new THREE.MeshStandardMaterial({color:0x1a212e,roughness:0.9})); base.position.y=0.08; pump.add(base);
+    var volute=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,0.34,28), pm); volute.rotation.x=Math.PI/2; volute.position.set(-0.12,0.55,0); volute.castShadow=true; pump.add(volute);
+    var motor=new THREE.Mesh(new THREE.BoxGeometry(0.52,0.4,0.42), new THREE.MeshStandardMaterial({color:0x232c3a,roughness:0.5,metalness:0.3})); motor.position.set(0.32,0.55,0); pump.add(motor);
+    pump.position.set(-3.95,0,1.9); scene.add(pump);
+  }
+  function buildPath(d){
+    pathPts=[]; cumLen=[]; totalLen=0;
+    function push(x,y,z){ var p=new THREE.Vector3(x,y,z);
+      if(pathPts.length){ totalLen+=p.distanceTo(pathPts[pathPts.length-1]); }
+      pathPts.push(p); cumLen.push(totalLen); }
+    push(-3.15,2.3,0);
+    if(d.shape==="round"){
+      push(1.9,2.3,0);
+      for(var a=80;a>=0;a-=10){ var rad=a*Math.PI/180; push(1.9+0.55*Math.cos(rad),1.75+0.55*Math.sin(rad),0); }
+      push(2.45,0.95,0);
+    } else { push(2.45,2.3,0); push(2.45,0.95,0); }
+  }
+  function samplePath(dist){
+    dist=((dist%totalLen)+totalLen)%totalLen;
+    for(var i=1;i<cumLen.length;i++){ if(dist<=cumLen[i]){
+      var t=(dist-cumLen[i-1])/Math.max(0.0001,(cumLen[i]-cumLen[i-1]));
+      return pathPts[i-1].clone().lerp(pathPts[i],t); } }
+    return pathPts[pathPts.length-1].clone();
+  }
+  function rebuildDuct(){
+    if(ductGroup){ scene.remove(ductGroup); ductGroup.traverse(function(o){ if(o.geometry)o.geometry.dispose(); }); }
+    ductGroup=new THREE.Group();
+    var d=ductDims(); buildPath(d);
+    ductMat=new THREE.MeshStandardMaterial({color:0x9db6cc,roughness:0.38,metalness:0.55});
+    var darkMat=new THREE.MeshStandardMaterial({color:0x232c3a,roughness:0.5,metalness:0.4});
+    var accMat=new THREE.MeshStandardMaterial({color:0xff4d0d,roughness:0.5,metalness:0.2});
+    if(d.shape==="round"){
+      var r=d.r;
+      var horiz=new THREE.Mesh(new THREE.CylinderGeometry(r,r,5.1,36), ductMat); horiz.rotation.z=Math.PI/2; horiz.position.set(-0.65,2.3,0); horiz.castShadow=true; ductGroup.add(horiz);
+      var elbow=new THREE.Mesh(new THREE.TorusGeometry(0.55,r,20,28,Math.PI/2), ductMat); elbow.position.set(1.9,1.75,0); elbow.castShadow=true; ductGroup.add(elbow);
+      var vert=new THREE.Mesh(new THREE.CylinderGeometry(r,r,0.85,36), ductMat); vert.position.set(2.45,1.32,0); vert.castShadow=true; ductGroup.add(vert);
+      var fan=new THREE.Mesh(new THREE.CylinderGeometry(r*1.16,r*1.16,0.55,36), darkMat); fan.rotation.z=Math.PI/2; fan.position.set(-2.35,2.3,0); ductGroup.add(fan);
+      [-2.6,-2.1].forEach(function(x){ var rg=new THREE.Mesh(new THREE.TorusGeometry(r*1.16,0.028,8,40), accMat); rg.rotation.y=Math.PI/2; rg.position.set(x,2.3,0); ductGroup.add(rg); });
+      var vav=new THREE.Mesh(new THREE.CylinderGeometry(r*1.2,r*1.2,0.85,36), darkMat); vav.rotation.z=Math.PI/2; vav.position.set(0.55,2.3,0); ductGroup.add(vav);
+      var diff=new THREE.Mesh(new THREE.CylinderGeometry(r*0.5,r*1.05,0.24,36), darkMat); diff.position.set(2.45,0.83,0); ductGroup.add(diff);
+    } else {
+      var w=d.w,h=d.h;
+      var hb=new THREE.Mesh(new THREE.BoxGeometry(5.65,h,w), ductMat); hb.position.set(-0.375,2.3,0); hb.castShadow=true; ductGroup.add(hb);
+      var vb=new THREE.Mesh(new THREE.BoxGeometry(h,1.5,w), ductMat); vb.position.set(2.45,1.6,0); vb.castShadow=true; ductGroup.add(vb);
+      var fanb=new THREE.Mesh(new THREE.BoxGeometry(0.55,h*1.14,w*1.14), darkMat); fanb.position.set(-2.35,2.3,0); ductGroup.add(fanb);
+      [-2.6,-2.1].forEach(function(x){ var rb=new THREE.Mesh(new THREE.BoxGeometry(0.05,h*1.16,w*1.16), accMat); rb.position.set(x,2.3,0); ductGroup.add(rb); });
+      var vavb=new THREE.Mesh(new THREE.BoxGeometry(0.85,h*1.18,w*1.18), darkMat); vavb.position.set(0.55,2.3,0); ductGroup.add(vavb);
+      var diffb=new THREE.Mesh(new THREE.BoxGeometry(w*0.9,0.16,w*0.9), darkMat); diffb.position.set(2.45,0.9,0); ductGroup.add(diffb);
+    }
+    scene.add(ductGroup);
+    applyXray();
+  }
+  function rebuildPipes(){
+    if(pipeGroup){ scene.remove(pipeGroup); pipeGroup.traverse(function(o){ if(o.geometry)o.geometry.dispose(); }); }
+    pipeGroup=new THREE.Group();
+    var r=clamp(pipeD()/2,0.035,0.16);
+    pipeFMat=new THREE.MeshStandardMaterial({color:0x0aa58c,roughness:0.35,metalness:0.3,emissive:0x04332b});
+    pipeRMat=new THREE.MeshStandardMaterial({color:0x076051,roughness:0.4,metalness:0.3});
+    [[0.62,pipeFMat],[0.38,pipeRMat]].forEach(function(cfg){
+      var p=new THREE.Mesh(new THREE.CylinderGeometry(r,r,7.0,28), cfg[1]); p.rotation.z=Math.PI/2; p.position.set(-0.1,cfg[0],1.9); p.castShadow=true; pipeGroup.add(p);
+      var riser=new THREE.Mesh(new THREE.CylinderGeometry(r,r,0.9,28), cfg[1]); riser.position.set(3.35,cfg[0]+0.45,1.9); pipeGroup.add(riser);
+      var joint=new THREE.Mesh(new THREE.SphereGeometry(r*1.02,20,16), cfg[1]); joint.position.set(3.35,cfg[0],1.9); pipeGroup.add(joint);
+    });
+    for(var x=-3.2;x<=3.2;x+=1.6){ var sup=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.3,0.3), new THREE.MeshStandardMaterial({color:0x1a212e,roughness:0.9})); sup.position.set(x,0.15,1.9); pipeGroup.add(sup); }
+    scene.add(pipeGroup);
+  }
+  function makeParticles(){
+    var N=240, pos=new Float32Array(N*3), geo=new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos,3));
+    airPts=new THREE.Points(geo, new THREE.PointsMaterial({color:0x5db9ff,size:0.085,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false}));
+    airOff=[]; for(var i=0;i<N;i++) airOff.push(Math.random());
+    scene.add(airPts);
+    var M=110, pos2=new Float32Array(M*3), geo2=new THREE.BufferGeometry();
+    geo2.setAttribute("position", new THREE.BufferAttribute(pos2,3));
+    waterPts=new THREE.Points(geo2, new THREE.PointsMaterial({color:0x2fe0bd,size:0.07,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false}));
+    waterOff=[]; for(var j=0;j<M;j++) waterOff.push(Math.random());
+    scene.add(waterPts);
+  }
+  function applyXray(){
+    var op=st.xray?0.28:1;
+    [ductMat,ahuMat,ahuPanelMat].forEach(function(m){ if(!m)return; m.transparent=st.xray; m.opacity=op; m.depthWrite=!st.xray; m.needsUpdate=true; });
+  }
+  function setView(name){
+    if(name==="persp"){ cam.theta=0.72; cam.phi=1.03; cam.r=11.6; }
+    if(name==="front"){ cam.theta=0; cam.phi=1.32; cam.r=12.5; }
+    if(name==="top"){ cam.theta=0.72; cam.phi=0.14; cam.r=13.5; }
+    if(name==="end"){ cam.theta=Math.PI/2; cam.phi=1.25; cam.r=11; }
+    document.querySelectorAll("#viewRow .tgl").forEach(function(b){ b.classList.toggle("on", b.dataset.view===name); });
+  }
+  function bindUI(){
+    function wire(id,key,fn){ var b=el(id); if(!b)return; b.addEventListener("click",function(){ st[key]=!st[key]; b.classList.toggle("on",st[key]); b.textContent=st[key]?"ON":"OFF"; if(fn)fn(); }); }
+    wire("tglAir","air",function(){ if(airPts)airPts.visible=st.air; });
+    wire("tglWater","water",function(){ if(waterPts)waterPts.visible=st.water; });
+    wire("tglRotate","rotate",null);
+    wire("tglXray","xray",applyXray);
+    document.querySelectorAll("#viewRow .tgl").forEach(function(b){ b.addEventListener("click",function(){ setView(b.dataset.view); }); });
+    var cv=renderer.domElement, drag=false, px=0, py=0;
+    cv.addEventListener("pointerdown",function(e){ drag=true; px=e.clientX; py=e.clientY; cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener("pointermove",function(e){ if(!drag)return; cam.theta-=(e.clientX-px)*0.005; cam.phi=clamp(cam.phi-(e.clientY-py)*0.005,0.08,1.5); px=e.clientX; py=e.clientY; });
+    cv.addEventListener("pointerup",function(){ drag=false; });
+    cv.addEventListener("wheel",function(e){ e.preventDefault(); cam.r=clamp(cam.r+e.deltaY*0.012,5.5,20); },{passive:false});
+    window.addEventListener("resize",resize);
+  }
+  function resize(){
+    if(!renderer||!wrap)return;
+    var w=wrap.clientWidth, h=wrap.clientHeight; if(!w||!h)return;
+    renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();
+  }
+  function numFrom(id){ var t=el(id)?el(id).textContent:""; var v=parseFloat(t.replace(/[^0-9.]/g,"")); return isFinite(v)?v:0; }
+  function syncReadouts(){
+    var d=ductDims();
+    el("chipDuct").textContent = d.shape==="round" ? ("Ø "+Math.round(val("dD",630))+" mm") : (Math.round(val("dW",800))+" × "+Math.round(val("dH",300))+" mm");
+    el("chipAir").textContent = el("dVel")?el("dVel").textContent.trim():"—";
+    el("chipPipe").textContent = "ID "+(pipeD()*1000).toFixed(1)+" mm";
+    el("chipWater").textContent = el("wVel")?el("wVel").textContent.trim():"—";
+  }
+  function init(){
+    inited=true;
+    if(typeof THREE==="undefined"){ return; } // fallback message stays visible
+    var fb=el("glFallback"); if(fb)fb.style.display="none";
+    wrap=el("glWrap");
+    renderer=new THREE.WebGLRenderer({antialias:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+    wrap.insertBefore(renderer.domElement, wrap.firstChild);
+    scene=new THREE.Scene(); scene.background=new THREE.Color(0x0c1017); scene.fog=new THREE.Fog(0x0c1017,20,36);
+    camera=new THREE.PerspectiveCamera(42,1,0.1,100);
+    scene.add(new THREE.HemisphereLight(0xdfe8f5,0x1a212e,0.85));
+    var key=new THREE.DirectionalLight(0xffffff,0.85); key.position.set(6,10,6); key.castShadow=true;
+    key.shadow.mapSize.set(1024,1024); key.shadow.camera.left=-9; key.shadow.camera.right=9; key.shadow.camera.top=9; key.shadow.camera.bottom=-9;
+    scene.add(key);
+    var rim=new THREE.DirectionalLight(0x5db9ff,0.3); rim.position.set(-7,4,-6); scene.add(rim);
+    buildStatic(); rebuildDuct(); rebuildPipes(); makeParticles();
+    lastKey=syncKey(); syncReadouts();
+    bindUI(); resize();
+    clock=new THREE.Clock();
+    animate();
+  }
+  function animate(){
+    requestAnimationFrame(animate);
+    var active=el("tool-viz3d") && el("tool-viz3d").classList.contains("active");
+    if(!active) return;
+    var dt=Math.min(clock.getDelta(),0.05);
+    if(st.rotate) cam.theta+=dt*0.18;
+    var sp=Math.sin(cam.phi), x=cam.cx+cam.r*sp*Math.sin(cam.theta), y=cam.cy+cam.r*Math.cos(cam.phi), z=cam.cz+cam.r*sp*Math.cos(cam.theta);
+    camera.position.set(x,y,z); camera.lookAt(cam.cx,cam.cy,cam.cz);
+    // particles
+    if(airPts && totalLen>0){
+      var vA=numFrom("dVel")||6, posA=airPts.geometry.attributes.position;
+      for(var i=0;i<airOff.length;i++){ airOff[i]=(airOff[i]+dt*vA*0.42/totalLen)%1; var p=samplePath(airOff[i]*totalLen); posA.setXYZ(i,p.x,p.y,p.z); }
+      posA.needsUpdate=true;
+    }
+    if(waterPts){
+      var vW=numFrom("wVel")||1, posW=waterPts.geometry.attributes.position, L=6.8;
+      for(var j=0;j<waterOff.length;j++){ waterOff[j]=(waterOff[j]+dt*vW*0.55/L)%1; posW.setXYZ(j,-3.5+waterOff[j]*L,0.62,1.9); }
+      posW.needsUpdate=true;
+    }
+    renderer.render(scene,camera);
+  }
+  setInterval(function(){
+    var sec=el("tool-viz3d"); if(!sec) return;
+    if(sec.classList.contains("active")){
+      if(!inited) init();
+      else if(!renderer){ syncReadouts(); }
+      else if(renderer){ resize();
+        var now=performance.now();
+        if(now-lastSync>450){ lastSync=now; var k=syncKey(); if(k!==lastKey){ lastKey=k; rebuildDuct(); rebuildPipes(); } syncReadouts(); }
+      }
+    }
+  },250);
+})();
+</script>
+<script>
+/* ---------- CALCULATION RECORD (QA EXPORT) ---------- */
+(function(){
+  "use strict";
+  function el(id){return document.getElementById(id);}
+  function txt(id){var e=el(id);return e?e.textContent.replace(/\s+/g," ").trim():"—";}
+  function fld(id){var e=el(id);return e&&e.value.trim()?e.value.trim():"—";}
+  var btn=el("dlRecord"); if(!btn)return;
+  btn.addEventListener("click",function(){
+    var rows=[
+      ["Duct Sizer — total pressure drop", txt("dTot")],
+      ["Duct Sizer — velocity", txt("dVel")],
+      ["Duct Sizer — friction rate", txt("dFric")],
+      ["Psychrometrics — enthalpy", txt("pH")],
+      ["Psychrometrics — humidity ratio", txt("pW")],
+      ["Psychrometrics — dew point", txt("pDP")],
+      ["Ventilation 62.1 — zone outdoor airflow Voz", txt("vVoz")],
+      ["Pipe Hydraulics — pump duty head", txt("wHead")],
+      ["Pipe Hydraulics — velocity", txt("wVel")],
+      ["Pipe Hydraulics — pump shaft power", txt("wPow")],
+      ["Water & Coil — required flow", txt("cFlow")],
+      ["Water & Coil — COP", txt("cCOP")],
+      ["Fan Laws — shaft power at speed 2", txt("fPow2")],
+      ["Room Load Estimator — total cooling load", txt("lTot")]
+    ];
+    var lines=[
+      "BUILDING SERVICES MECHANICAL TOOLKIT — CALCULATION RECORD",
+      "============================================================",
+      "Project:       "+fld("recProject"),
+      "Calc ref:      "+fld("recRef"),
+      "Prepared by:   "+fld("recBy"),
+      "Checked by:    "+fld("recChecked"),
+      "Date (UTC):    "+new Date().toISOString(),
+      "",
+      "HEADLINE RESULTS (as shown on screen at time of issue)",
+      "------------------------------------------------------------"
+    ];
+    rows.forEach(function(r){ lines.push(r[0]+": "+r[1]); });
+    lines.push(
+      "",
+      "STANDARDS BASIS",
+      "------------------------------------------------------------",
+      "ASHRAE 62.1 Ventilation Rate Procedure · ASHRAE Fundamentals",
+      "psychrometrics (Buck / Stull) · Darcy-Weisbach with Colebrook",
+      "friction via Haaland · Huebscher equivalent diameter ·",
+      "ASME B36.10 Schedule 40 pipe dimensions · CIBSE AM12 / ASHRAE",
+      "design bands applied as checks.",
+      "",
+      "STATUS",
+      "------------------------------------------------------------",
+      "Design-stage calculation aid. Not for construction until",
+      "independently checked by a qualified engineer against the",
+      "project specification, local code and manufacturer data.",
+      "Uncontrolled when printed."
+    );
+    var blob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a");
+    var name=(fld("recRef")!=="—"?fld("recRef"):"calculation-record").replace(/[^a-zA-Z0-9-_]+/g,"-");
+    a.href=url; a.download=name+".txt";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(url);},2000);
+  });
+})();
+</script>
+</body>
+</html>
