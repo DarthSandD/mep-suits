@@ -11,7 +11,7 @@ Interactive toolkit for building services mechanical engineering:
 - Fan Laws & Power (affinity cube law, annual energy/cost)
 - Room Cooling Load Estimator (11 editable gains, breakdown, implied flows)
 - Unit Converter + property / design reference tables
-- 3D System Viewer (Three.js plant-room: AHU, duct run, VAV, elbow, diffuser, CHW pump + pipes, live-linked to Duct + Pipe calculators)
+- 3D System Viewer (Three.js plant-room: outdoor AC unit, rectangular/circular duct runs, industrial pipes + ceiling fan, live-linked to Duct + Pipe calculators)
 
 ## Use
 
