@@ -621,7 +621,7 @@ svg{max-width:100%;height:auto;display:block}
       <div class="viz" style="padding:14px">
         <h3>Plant room — AC unit · duct run · pipes</h3>
         <div class="glwrap" id="glWrap">
-          <div class="glfallback" id="glFallback">Warming up the 3D engine…<br>If the room doesn't appear, your network has blocked the Three.js CDN — frustrating, but I built it so every calculator still works perfectly in 2D.</div>
+          <div class="glfallback" id="glFallback">Warming up the 3D engine…<br>If the room doesn't appear, your connection may have hiccupped — reloading usually fixes it, and every calculator still works perfectly in 2D either way.</div>
           <div class="glchips">
             <span class="glchip">DUCT <b id="chipDuct">—</b></span>
             <span class="glchip">AIR <b id="chipAir">—</b></span>
@@ -1009,7 +1009,8 @@ Object.keys(LIMITS).forEach(id=>{const e=$(id);if(e){e.min=LIMITS[id][0];e.max=L
 /* ---------- init ---------- */
 calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); calcLoad();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="vendor/three.min.js"></script>
+<script>if(typeof THREE==="undefined"){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>');}</script>
 <script>
 /* ---------- 3D SYSTEM VIEWER — real CC0 models (Poly Haven) ---------- */
 (function(){
@@ -1136,6 +1137,7 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     if(loaderTried){ fail(); return; }
     loaderTried=true;
     var urls=[
+      "vendor/GLTFLoader.js",
       "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js",
       "https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"
     ];
@@ -1185,9 +1187,9 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     // The floor/labels/particles still render; every calculator keeps working.
     if(fallbackShown) return; fallbackShown=true;
     var fb=el("glFallback");
-    if(fb){ fb.style.display="grid"; fb.innerHTML="3D models could not load — your network or the CDN blocked them.<br>Every calculator still works in 2D."; }
+    if(fb){ fb.style.display="grid"; fb.innerHTML="3D models could not load — your connection may have dropped; try reloading the page.<br>Every calculator still works in 2D."; }
     var cap=el("glCaption");
-    if(cap) cap.textContent="3D models could not load (network or CDN blocked). Every calculator still works.";
+    if(cap) cap.textContent="3D models could not load (connection issue — try reloading). Every calculator still works.";
   }
   function refreshDuctVisibility(){
     var round = ductDims().shape==="round";
