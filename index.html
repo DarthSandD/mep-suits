@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="color-scheme" content="light dark"/>
 <meta name="referrer" content="no-referrer"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'"/>
 <link rel="icon" href="data:,"/>
 <title>Building Services Mechanical Toolkit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -624,7 +624,7 @@ svg{max-width:100%;height:auto;display:block}
       <h3>Play with it</h3>
       <div class="tglrow"><div>Airflow particles</div><button class="tgl on" id="tglAir">ON</button></div>
       <div class="tglrow"><div>Water flow particles</div><button class="tgl on" id="tglWater">ON</button></div>
-      <details class="method"><summary>How it is wired</summary><div class="method-body"><div class="formula"><b>Wired straight to your calcs</b><br>Duct section &amp; velocity ← <b>Duct Sizer</b><br>Pipe bore &amp; velocity ← <b>Pipe Hydraulics</b><br>Change a number over there — this room rebuilds itself.</div></div></details>
+      <details class="method"><summary>How it is wired</summary><div class="method-body"><div class="formula"><b>Wired straight to your calcs</b><br>Duct section &amp; velocity ← <b>Duct Sizer</b><br>Pipe bore &amp; velocity ← <b>Pipe Hydraulics</b><br>Change a number over there and this room rebuilds itself.</div></div></details>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
         <button class="go3d" data-go="duct" style="background:var(--panel);color:var(--ink);border-color:var(--line)">Edit duct inputs <span>↗</span></button>
         <button class="go3d" data-go="pipe" style="background:var(--panel);color:var(--ink);border-color:var(--line)">Edit pipe inputs <span>↗</span></button>
@@ -632,25 +632,25 @@ svg{max-width:100%;height:auto;display:block}
     </div>
     <div>
       <div class="viz" style="padding:14px">
-        <h3>Plant room — AC unit · duct run · pipes</h3>
+        <h3>Plant room: AC unit · duct run · pipes</h3>
         <div class="glwrap" id="glWrap">
-          <div class="glfallback" id="glFallback">Warming up the 3D engine…<br>If the room doesn't appear, your connection may have hiccupped — reloading usually fixes it, and every calculator still works perfectly in 2D either way.</div>
+          <div class="glfallback" id="glFallback">Warming up the 3D engine…<br>If the room doesn't appear, your connection may have hiccupped - reloading usually fixes it, and every calculator still works perfectly in 2D either way.</div>
           <div class="glchips">
-            <span class="glchip">DUCT <b id="chipDuct">—</b></span>
-            <span class="glchip">AIR <b id="chipAir">—</b></span>
-            <span class="glchip">PIPE <b id="chipPipe">—</b></span>
-            <span class="glchip">WATER <b id="chipWater">—</b></span>
+            <span class="glchip">DUCT <b id="chipDuct">-</b></span>
+            <span class="glchip">AIR <b id="chipAir">-</b></span>
+            <span class="glchip">PIPE <b id="chipPipe">-</b></span>
+            <span class="glchip">WATER <b id="chipWater">-</b></span>
           </div>
           <div class="glhint">DRAG orbit · SCROLL zoom · CLICK a model for one line</div>
         </div>
-      <div class="glcaption" id="glCaption">Real models, CC0 — see credits below the viewer.</div>
+      <div class="glcaption" id="glCaption">Real models, CC0. See credits below the viewer.</div>
       </div>
-      <p class="foot">The room shows real downloaded models: an outdoor AC unit, a straight duct run (rectangular or circular, following your Duct Sizer shape — straight sections of the set), and a straight run of industrial pipes. Take pressure drops from the calculators, never from the picture. Particle speed is proportional to the real velocity in each system.</p>
+      <p class="foot">The room shows real downloaded models: an outdoor AC unit, a straight duct run (rectangular or circular, following your Duct Sizer shape, straight sections of the set), and a straight run of industrial pipes. Take pressure drops from the calculators, never from the picture. Particle speed is proportional to the real velocity in each system.</p>
     </div>
   </div>
 </section>
 
-  <p class="foot" style="margin-top:10px">3D models: Outdoor AC unit, Rectangular duct run, Circular duct run, Industrial pipe run, Ceiling fan — all CC0 from Poly Haven. Ducts and pipes show the straight sections of each set, arranged as one straight run. Each model is labelled by what it actually is. Full provenance in ASSETS.md.</p>
+  <p class="foot" style="margin-top:10px">3D models: Outdoor AC unit, Rectangular duct run, Circular duct run, Industrial pipe run, Ceiling fan: all CC0 from Poly Haven. Ducts and pipes show the straight sections of each set, arranged as one straight run. Each model is labelled by what it actually is. Full provenance in ASSETS.md.</p>
 <footer class="sitefoot"><b>Design aid.</b> MEP Suits is a design-stage aid — do not issue anything for construction until a qualified engineer has checked it against the project spec, local code, and the manufacturer’s real data. Uncontrolled when printed.</footer>
 </main>
 </div>
@@ -1039,11 +1039,11 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
   // run is ever visible (rectangular OR circular, never both).
   var V="?v=20261020b"; // cache-bust tag for all viewer assets (stale phone caches)
   var modelDefs=[
-    {key:"ac",     file:"models/ac-unit.glb"+V,            label:"Outdoor AC unit — real CC0 model from Poly Haven.",                          pos:[-4.3,0,-0.9],   box:[2.6,2.2,1.2]},
-    {key:"ductR",  file:"models/duct-rectangular.glb"+V,    label:"Rectangular duct run — straight sections of the real CC0 set from Poly Haven.", pos:[-0.2,2.0,-1.1], box:[6.4,1.1,1.1], run:{keep:["modular_airduct_rectangular_01_single_01","modular_airduct_rectangular_01_double_01","modular_airduct_rectangular_01_tripple_01","modular_airduct_rectangular_01_half_01"],mode:"rotY"}},
-    {key:"ductC",  file:"models/duct-circular.glb"+V,       label:"Circular duct run — straight sections of the real CC0 set from Poly Haven.",     pos:[-0.2,2.0,-1.1], box:[6.4,1.0,1.0], run:{keep:["modular_airduct_circular_single","modular_airduct_circular_double","modular_airduct_circular_smooth_single","modular_airduct_circular_smooth_double","modular_airduct_circular_smooth_triple"],mode:"rotY"}},
-    {key:"pipes",  file:"models/pipes-industrial.glb"+V,   label:"Straight pipe run — straight sections of the real CC0 set from Poly Haven.",   pos:[1.2,0.55,1.6],  box:[6.2,1.3,1.3], run:{keep:["modular_industrial_pipes_01_pipe02","modular_industrial_pipes_01_pipe01"],mode:"rotZ"}},
-    {key:"fan",    file:"models/ceiling-fan.glb"+V,       label:"Ceiling fan — real CC0 model from Poly Haven. Labelled exactly that; it is NOT a centrifugal fan.", pos:[0.5,3.4,0.8], box:[2.2,1.2,2.2]}
+    {key:"ac",     file:"models/ac-unit.glb"+V,            label:"Outdoor AC unit: real CC0 model from Poly Haven.",                          pos:[-4.3,0,-0.9],   box:[2.6,2.2,1.2]},
+    {key:"ductR",  file:"models/duct-rectangular.glb"+V,    label:"Rectangular duct run: straight sections of the real CC0 set from Poly Haven.", pos:[-0.2,2.0,-1.1], box:[6.4,1.1,1.1], run:{keep:["modular_airduct_rectangular_01_single_01","modular_airduct_rectangular_01_double_01","modular_airduct_rectangular_01_tripple_01","modular_airduct_rectangular_01_half_01"],mode:"rotY"}},
+    {key:"ductC",  file:"models/duct-circular.glb"+V,       label:"Circular duct run: straight sections of the real CC0 set from Poly Haven.",     pos:[-0.2,2.0,-1.1], box:[6.4,1.0,1.0], run:{keep:["modular_airduct_circular_single","modular_airduct_circular_double","modular_airduct_circular_smooth_single","modular_airduct_circular_smooth_double","modular_airduct_circular_smooth_triple"],mode:"rotY"}},
+    {key:"pipes",  file:"models/pipes-industrial.glb"+V,   label:"Straight pipe run: straight sections of the real CC0 set from Poly Haven.",   pos:[1.2,0.55,1.6],  box:[6.2,1.3,1.3], run:{keep:["modular_industrial_pipes_01_pipe02","modular_industrial_pipes_01_pipe01"],mode:"rotZ"}},
+    {key:"fan",    file:"models/ceiling-fan.glb"+V,       label:"Ceiling fan: real CC0 model from Poly Haven. Labelled exactly that; it is NOT a centrifugal fan.", pos:[0.5,3.4,0.8], box:[2.2,1.2,2.2]}
   ];
   var airPts=null, waterPts=null, airOff=[], waterOff=[];
   var pathPts=[], cumLen=[], totalLen=0;
@@ -1205,9 +1205,9 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     // The floor/labels/particles still render; every calculator keeps working.
     if(fallbackShown) return; fallbackShown=true;
     var fb=el("glFallback");
-    if(fb){ fb.style.display="grid"; fb.innerHTML="3D models could not load — connection issue (viewer v2). Try a hard reload; the page no longer needs any CDN.<br>Every calculator still works in 2D."; }
+    if(fb){ fb.style.display="grid"; fb.innerHTML="3D models could not load - connection issue (viewer v3). Try a hard reload; the page no longer needs any CDN.<br>Every calculator still works in 2D."; }
     var cap=el("glCaption");
-    if(cap) cap.textContent="3D models could not load (viewer v2 — connection issue). Every calculator still works.";
+    if(cap) cap.textContent="3D models could not load (viewer v3 - connection issue). Every calculator still works.";
   }
   function refreshDuctVisibility(){
     var round = ductDims().shape==="round";
@@ -1256,9 +1256,9 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
   function syncReadouts(){
     var d=ductDims();
     el("chipDuct").textContent = d.shape==="round" ? ("Ø "+Math.round(val("dD",630))+" mm") : (Math.round(val("dW",800))+" × "+Math.round(val("dH",300))+" mm");
-    el("chipAir").textContent = el("dVel")?el("dVel").textContent.trim():"—";
+    el("chipAir").textContent = el("dVel")?el("dVel").textContent.trim():"-";
     el("chipPipe").textContent = "ID "+(pipeD()*1000).toFixed(1)+" mm";
-    el("chipWater").textContent = el("wVel")?el("wVel").textContent.trim():"—";
+    el("chipWater").textContent = el("wVel")?el("wVel").textContent.trim():"-";
   }
   function init(){
     // VIEWER-V2: THREE must exist before we mark init done. Previously

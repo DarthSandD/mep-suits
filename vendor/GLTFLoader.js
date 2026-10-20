@@ -1737,18 +1737,15 @@
 				uses: {}
 			}; // Track node names, to ensure no duplicates
 
-			this.nodeNamesUsed = {}; // Use an THREE.ImageBitmapLoader if imageBitmaps are supported. Moves much of the
-			// expensive work of uploading a texture to the GPU off the main thread.
-
-			if ( typeof createImageBitmap !== 'undefined' && /Firefox/.test( navigator.userAgent ) === false ) {
-
-				this.textureLoader = new THREE.ImageBitmapLoader( this.options.manager );
-
-			} else {
-
-				this.textureLoader = new THREE.TextureLoader( this.options.manager );
-
-			}
+			this.nodeNamesUsed = {};
+			// MEP VIEWER-V3 FIX: always use the classic TextureLoader path.
+			// The ImageBitmapLoader branch fetches embedded-texture blob URLs
+			// via fetch(blob:), which Chrome blocks under a CSP of
+			// "connect-src 'self'" (no blob:) — every GLB texture load then
+			// rejects, every model parse fails, and the viewer falls back.
+			// The <img>-based TextureLoader path is governed by img-src,
+			// which already allows blob:, so textures load in all browsers.
+			this.textureLoader = new THREE.TextureLoader( this.options.manager );
 
 			this.textureLoader.setCrossOrigin( this.options.crossOrigin );
 			this.textureLoader.setRequestHeader( this.options.requestHeader );
