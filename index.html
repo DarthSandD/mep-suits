@@ -1009,8 +1009,10 @@ Object.keys(LIMITS).forEach(id=>{const e=$(id);if(e){e.min=LIMITS[id][0];e.max=L
 /* ---------- init ---------- */
 calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); calcLoad();
 </script>
-<script src="vendor/three.min.js"></script>
-<script>if(typeof THREE==="undefined"){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>');}</script>
+<!-- VIEWER-V2: fully self-hosted 3D load path. three.min.js and GLTFLoader.js are
+     vendored same-origin; no CDN in the load-critical path. The ?v= tag busts
+     stale caches of these assets on aggressive phone browsers. -->
+<script src="vendor/three.min.js?v=20261020b"></script>
 <script>
 /* ---------- 3D SYSTEM VIEWER — real CC0 models (Poly Haven) ---------- */
 (function(){
@@ -1022,12 +1024,13 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
   // AC unit on the ground, left · one straight duct run above/behind it ·
   // one straight pipe run on the right, near the ground. Only ONE duct
   // run is ever visible (rectangular OR circular, never both).
+  var V="?v=20261020b"; // cache-bust tag for all viewer assets (stale phone caches)
   var modelDefs=[
-    {key:"ac",     file:"models/ac-unit.glb",            label:"Outdoor AC unit — real CC0 model from Poly Haven.",                          pos:[-4.3,0,-0.9],   box:[2.6,2.2,1.2]},
-    {key:"ductR",  file:"models/duct-rectangular.glb",    label:"Rectangular duct run — straight sections of the real CC0 set from Poly Haven.", pos:[-0.2,2.0,-1.1], box:[6.4,1.1,1.1], run:{keep:["modular_airduct_rectangular_01_single_01","modular_airduct_rectangular_01_double_01","modular_airduct_rectangular_01_tripple_01","modular_airduct_rectangular_01_half_01"],mode:"rotY"}},
-    {key:"ductC",  file:"models/duct-circular.glb",       label:"Circular duct run — straight sections of the real CC0 set from Poly Haven.",     pos:[-0.2,2.0,-1.1], box:[6.4,1.0,1.0], run:{keep:["modular_airduct_circular_single","modular_airduct_circular_double","modular_airduct_circular_triple","modular_airduct_circular_smooth_single","modular_airduct_circular_smooth_double","modular_airduct_circular_smooth_triple"],mode:"rotY"}},
-    {key:"pipes",  file:"models/pipes-industrial.glb",   label:"Straight pipe run — straight sections of the real CC0 set from Poly Haven.",   pos:[1.2,0.55,1.6],  box:[6.2,1.3,1.3], run:{keep:["modular_industrial_pipes_01_pipe02","modular_industrial_pipes_01_pipe01"],mode:"rotZ"}},
-    {key:"fan",    file:"models/ceiling-fan.glb",       label:"Ceiling fan — real CC0 model from Poly Haven. Labelled exactly that; it is NOT a centrifugal fan.", pos:[0.5,3.4,0.8], box:[2.2,1.2,2.2]}
+    {key:"ac",     file:"models/ac-unit.glb"+V,            label:"Outdoor AC unit — real CC0 model from Poly Haven.",                          pos:[-4.3,0,-0.9],   box:[2.6,2.2,1.2]},
+    {key:"ductR",  file:"models/duct-rectangular.glb"+V,    label:"Rectangular duct run — straight sections of the real CC0 set from Poly Haven.", pos:[-0.2,2.0,-1.1], box:[6.4,1.1,1.1], run:{keep:["modular_airduct_rectangular_01_single_01","modular_airduct_rectangular_01_double_01","modular_airduct_rectangular_01_tripple_01","modular_airduct_rectangular_01_half_01"],mode:"rotY"}},
+    {key:"ductC",  file:"models/duct-circular.glb"+V,       label:"Circular duct run — straight sections of the real CC0 set from Poly Haven.",     pos:[-0.2,2.0,-1.1], box:[6.4,1.0,1.0], run:{keep:["modular_airduct_circular_single","modular_airduct_circular_double","modular_airduct_circular_smooth_single","modular_airduct_circular_smooth_double","modular_airduct_circular_smooth_triple"],mode:"rotY"}},
+    {key:"pipes",  file:"models/pipes-industrial.glb"+V,   label:"Straight pipe run — straight sections of the real CC0 set from Poly Haven.",   pos:[1.2,0.55,1.6],  box:[6.2,1.3,1.3], run:{keep:["modular_industrial_pipes_01_pipe02","modular_industrial_pipes_01_pipe01"],mode:"rotZ"}},
+    {key:"fan",    file:"models/ceiling-fan.glb"+V,       label:"Ceiling fan — real CC0 model from Poly Haven. Labelled exactly that; it is NOT a centrifugal fan.", pos:[0.5,3.4,0.8], box:[2.2,1.2,2.2]}
   ];
   var airPts=null, waterPts=null, airOff=[], waterOff=[];
   var pathPts=[], cumLen=[], totalLen=0;
@@ -1136,10 +1139,12 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     if(typeof THREE!=="undefined" && THREE.GLTFLoader){ done(); return; }
     if(loaderTried){ fail(); return; }
     loaderTried=true;
+    // VIEWER-V2: same-origin only. The vendored GLTFLoader.js is the r128
+    // examples/js build, version-matched to vendor/three.min.js (r128, REVISION
+    // verified "128" in the file). No CDN fallbacks: they are blocked on the
+    // user's network anyway and only add failure latency.
     var urls=[
-      "vendor/GLTFLoader.js",
-      "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js",
-      "https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"
+      "vendor/GLTFLoader.js?v=20261020b"
     ];
     function tryNext(i){
       if(i>=urls.length){ fail(); return; }
@@ -1187,9 +1192,9 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     // The floor/labels/particles still render; every calculator keeps working.
     if(fallbackShown) return; fallbackShown=true;
     var fb=el("glFallback");
-    if(fb){ fb.style.display="grid"; fb.innerHTML="3D models could not load — your connection may have dropped; try reloading the page.<br>Every calculator still works in 2D."; }
+    if(fb){ fb.style.display="grid"; fb.innerHTML="3D models could not load — connection issue (viewer v2). Try a hard reload; the page no longer needs any CDN.<br>Every calculator still works in 2D."; }
     var cap=el("glCaption");
-    if(cap) cap.textContent="3D models could not load (connection issue — try reloading). Every calculator still works.";
+    if(cap) cap.textContent="3D models could not load (viewer v2 — connection issue). Every calculator still works.";
   }
   function refreshDuctVisibility(){
     var round = ductDims().shape==="round";
@@ -1243,8 +1248,12 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     el("chipWater").textContent = el("wVel")?el("wVel").textContent.trim():"—";
   }
   function init(){
+    // VIEWER-V2: THREE must exist before we mark init done. Previously
+    // inited=true ran BEFORE this check, so a blocked vendor/three.min.js
+    // left the viewer silently dead with no fallback and no retry.
+    if(typeof THREE==="undefined"){ showFallback(); return; }
     inited=true;
-    if(typeof THREE==="undefined"){ return; }
+    fallbackShown=false; // allow a later failure to re-show the message
     var fb=el("glFallback"); if(fb)fb.style.display="none";
     wrap=el("glWrap");
     renderer=new THREE.WebGLRenderer({antialias:true});
