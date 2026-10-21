@@ -158,17 +158,48 @@ svg{max-width:100%;height:auto;display:block}
 .convrow{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:10px}
 .convrow input,.convrow select{padding:11px 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--input);color:var(--ink);font-family:var(--mono);font-size:13.5px;width:100%;min-height:48px}
 .convrow .eq{font-family:var(--mono);color:var(--muted)}
-.glwrap{position:relative;background:#0B1526;border-radius:var(--r-sm);overflow:hidden;height:520px;border:1px solid var(--blue-ink);box-shadow:var(--shadow-2)}
+.glwrap{position:relative;background:#DDE3E8;border-radius:var(--r-sm);overflow:hidden;height:520px;border:1px solid var(--ink);box-shadow:inset 0 0 0 2px #F4F8FC,inset 0 0 0 3px rgba(18,35,59,.8),var(--shadow-2)}
 .glwrap canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 .glwrap canvas:active{cursor:grabbing}
 @media(max-width:860px){.glwrap{height:340px}}
-.glchips{position:absolute;top:14px;left:14px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none;max-width:calc(100% - 28px)}
-.glchip{background:rgba(9,8,5,.82);border:1px solid rgba(255,255,255,.14);color:#B9AE93;border-radius:var(--r-pill);padding:6px 11px;font-family:var(--mono);font-size:11px;backdrop-filter:blur(6px)}
-.glchip b{color:#fff;font-weight:700}
-.glhint{position:absolute;right:14px;bottom:12px;color:#8A8375;font-family:var(--mono);font-size:10.5px;pointer-events:none}
+.glpurpose{position:absolute;top:0;left:0;right:0;z-index:4;background:var(--ink);color:#D7E2F1;font-family:var(--mono);font-size:11px;letter-spacing:.04em;line-height:1.5;padding:7px 12px;pointer-events:none}
+.glpurpose b{color:#fff;font-weight:700}
+.glpurpose .glpsep{color:#5B7BA6;margin:0 6px}
+.glchips{position:absolute;top:52px;left:14px;z-index:3;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none;max-width:calc(100% - 28px)}
+.glchip{background:rgba(255,255,255,.88);border:1px solid rgba(18,35,59,.28);color:var(--muted);border-radius:var(--r-pill);padding:6px 11px;font-family:var(--mono);font-size:11px;backdrop-filter:blur(6px)}
+.glchip b{color:var(--ink);font-weight:700}
+.glsvg{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .4s}
+.glwrap.live .glsvg{opacity:1}
+.glsvg line{stroke:#22344C;stroke-width:1.2}
+.glsvg polygon{fill:#22344C}
+.gltags{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .4s}
+.glwrap.live .gltags{opacity:1}
+.gltag{position:absolute;left:0;top:0;background:#fff;border:1px solid #22344C;color:#12233B;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:4px 8px;white-space:nowrap;box-shadow:0 1px 3px rgba(18,35,59,.25);will-change:transform}
+.gltag-dim{background:var(--ink);color:#fff;border-color:var(--ink)}
+.glcompass{position:absolute;top:48px;right:12px;z-index:3;text-align:center;pointer-events:none;opacity:0;transition:opacity .4s}
+.glwrap.live .glcompass{opacity:1}
+.glcompass span{display:block;font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.14em;color:#22344C;margin-top:1px}
+.gltitle{position:absolute;left:12px;bottom:12px;z-index:3;background:rgba(255,255,255,.92);border:1px solid #22344C;color:#12233B;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.07em;line-height:1.45;padding:6px 10px;pointer-events:none}
+.gltitle span{display:block;font-size:9.5px;font-weight:400;letter-spacing:.05em;color:var(--muted)}
+.gllegend{position:absolute;top:128px;right:12px;z-index:3;background:rgba(255,255,255,.88);border:1px solid rgba(18,35,59,.28);border-radius:var(--r-pill);color:var(--muted);font-family:var(--mono);font-size:10px;padding:5px 11px;white-space:nowrap;pointer-events:none}
+.glwrap.narrow .glchips{top:78px}
+.glwrap.narrow .gllegend{display:none}
+.glwrap.narrow .glhint{display:none}
+.gllegend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 5px 0 2px;vertical-align:1px}
+.gllegend .dotair{background:var(--air)}
+.gllegend .dotwater{background:var(--water)}
+@media(max-width:700px){.gllegend{display:none}}
+.glwrap:not(.live) .glsvg,.glwrap:not(.live) .gltags,.glwrap:not(.live) .glcompass,.glwrap:not(.live) .glhint,.glwrap:not(.live) .gllegend{display:none!important}
+.bimsec{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;margin:20px 0 8px}
+.bimprops{font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface-2);padding:10px 13px;min-height:52px}
+.bimprops b{color:var(--ink)}
+.bimprops .bpname{display:block;font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.02em;margin-bottom:2px}
+.bimprops .bprow{display:flex;justify-content:space-between;gap:14px}
+.bimprops .bprow span:last-child{color:var(--ink);text-align:right}
+.glhint{position:absolute;right:14px;bottom:12px;z-index:3;color:#54687E;font-family:var(--mono);font-size:10.5px;pointer-events:none;max-width:38%;text-align:right;line-height:1.55}
 .glcaption{margin-top:12px;font-size:13.5px;color:var(--muted);min-height:20px;line-height:1.6}
 .glcaption b{color:var(--ink)}
-.glfallback{position:absolute;inset:0;display:grid;place-items:center;color:#B9AE93;text-align:center;padding:28px;font-size:13.5px;line-height:1.65}
+.glfallback{position:absolute;inset:0;z-index:1;display:grid;place-items:center;color:#33475E;text-align:center;padding:28px;font-size:13.5px;line-height:1.65}
 .tglrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-2);font-size:13.5px;font-weight:600}
 .tglrow:last-of-type{border-bottom:0}
 .tglrow small{display:block;font-weight:500;color:var(--muted);font-size:11.5px;margin-top:2px}
@@ -621,12 +652,26 @@ svg{max-width:100%;height:auto;display:block}
 
 <!-- ============ 3D VIEWER ============ -->
 <section class="tool" id="tool-viz3d">
-  <div class="toolhead"><h2>3D System Viewer</h2><p>Real plant-room models, driven by your Duct and Pipe numbers.</p></div>
+  <div class="toolhead"><h2>3D System Viewer</h2><p>A parametric plant room, rebuilt live from your Duct and Pipe numbers.</p></div>
   <div class="grid">
     <div class="card">
       <h3>Play with it</h3>
       <div class="tglrow"><div>Airflow particles</div><button class="tgl on" id="tglAir">ON</button></div>
       <div class="tglrow"><div>Water flow particles</div><button class="tgl on" id="tglWater">ON</button></div>
+      <div class="bimsec">View</div>
+      <div class="seg" id="bimView"><button data-v="3d" class="on">3D</button><button data-v="plan">Plan</button><button data-v="section">Section</button><button data-v="elevation">Elevation</button></div>
+      <div class="bimsec">Detail level</div>
+      <div class="seg" id="bimDetail"><button data-v="coarse">Coarse</button><button data-v="medium" class="on">Medium</button><button data-v="fine">Fine</button></div>
+      <div class="bimsec">Visual style</div>
+      <div class="seg" id="bimStyle"><button data-v="shaded">Shaded</button><button data-v="realistic" class="on">Realistic</button><button data-v="hiddenline">Hidden line</button><button data-v="wireframe">Wireframe</button></div>
+      <div class="bimsec">Systems</div>
+      <div class="tglrow"><div>Air system</div><button class="tgl on" id="tglSysAir">ON</button></div>
+      <div class="tglrow"><div>Water system</div><button class="tgl on" id="tglSysWater">ON</button></div>
+      <div class="tglrow"><div>Supports &amp; hangers</div><button class="tgl on" id="tglSupports">ON</button></div>
+      <div class="tglrow"><div>Pipe insulation</div><button class="tgl" id="tglInsulP">OFF</button></div>
+      <div class="tglrow"><div>Duct insulation</div><button class="tgl" id="tglInsulD">OFF</button></div>
+      <div class="bimsec">Component properties</div>
+      <div class="bimprops" id="bimProps">Click a component in the view: the unit, the duct run, the pipe pair, the pump set.</div>
       <details class="method"><summary>How it is wired</summary><div class="method-body"><div class="formula"><b>Wired straight to your calcs</b><br>Duct section &amp; velocity ← <b>Duct Sizer</b><br>Pipe bore &amp; velocity ← <b>Pipe Hydraulics</b><br>Change a number over there and this room rebuilds itself.</div></div></details>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
         <button class="go3d" data-go="duct" style="background:var(--panel);color:var(--ink);border-color:var(--line)">Edit duct inputs <span>↗</span></button>
@@ -638,22 +683,51 @@ svg{max-width:100%;height:auto;display:block}
         <h3>Plant room: AC unit · duct run · pipes</h3>
         <div class="glwrap" id="glWrap">
           <div class="glfallback" id="glFallback">Warming up the 3D engine…<br>If the room doesn't appear, your connection may have hiccupped - reloading usually fixes it, and every calculator still works perfectly in 2D either way.</div>
+          <div class="glpurpose" id="glPurpose">PLANT ROOM · 3D SYSTEM VIEW<span class="glpsep">|</span>Duct <b id="ppDuct">-</b> at <b id="ppAir">-</b><span class="glpsep">|</span>Pipe <b id="ppPipe">-</b> at <b id="ppWater">-</b><span class="glpsep">|</span>Sizes live from the Duct Sizer and Pipe Hydraulics</div>
           <div class="glchips">
             <span class="glchip">DUCT <b id="chipDuct">-</b></span>
             <span class="glchip">AIR <b id="chipAir">-</b></span>
             <span class="glchip">PIPE <b id="chipPipe">-</b></span>
             <span class="glchip">WATER <b id="chipWater">-</b></span>
           </div>
-          <div class="glhint">DRAG orbit · SCROLL zoom · CLICK a model for one line</div>
+          <svg class="glsvg" id="glSvg" aria-hidden="true">
+            <line id="ldAC" x1="0" y1="0" x2="0" y2="0"/><line id="ldDuct" x1="0" y1="0" x2="0" y2="0"/><line id="ldPipe" x1="0" y1="0" x2="0" y2="0"/><line id="ldPump" x1="0" y1="0" x2="0" y2="0"/>
+            <line id="dimExtA" x1="0" y1="0" x2="0" y2="0"/><line id="dimExtB" x1="0" y1="0" x2="0" y2="0"/><line id="dimLine" x1="0" y1="0" x2="0" y2="0"/>
+            <polygon id="dimArrA" points=""/><polygon id="dimArrB" points=""/>
+          </svg>
+          <div class="gltags" aria-hidden="true">
+            <div class="gltag" id="tagAC">AHU-1 · OUTDOOR UNIT</div>
+            <div class="gltag" id="tagDuct">DUCT RUN</div>
+            <div class="gltag" id="tagPipe">PIPE RUN</div>
+            <div class="gltag" id="tagPump">PUMP SET</div>
+            <div class="gltag gltag-dim" id="tagDim">-</div>
+          </div>
+          <div class="glcompass" aria-hidden="true">
+            <svg width="62" height="62" viewBox="0 0 62 62">
+              <circle cx="31" cy="31" r="29" fill="rgba(255,255,255,.92)" stroke="#22344C" stroke-width="1.2"/>
+              <g id="glRose">
+                <polygon points="31,5 34.5,14 27.5,14" fill="#EA580C"/>
+                <text x="31" y="24" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#12233B">N</text>
+                <text x="50" y="34.5" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#4A637F">E</text>
+                <text x="31" y="55" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#4A637F">S</text>
+                <text x="12" y="34.5" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#4A637F">W</text>
+              </g>
+              <circle cx="31" cy="31" r="2.2" fill="#22344C"/>
+            </svg>
+            <span>TOP</span>
+          </div>
+          <div class="gltitle">PLANT ROOM - 3D SYSTEM VIEW<span>MEP Suits · Not for construction</span></div>
+          <div class="gllegend"><i class="dotair"></i>air<i class="dotwater"></i>water<span style="margin-left:6px">Particle speed follows your calculated velocity</span></div>
+          <div class="glhint">DRAG orbit · SCROLL zoom · CLICK a component for its properties</div>
         </div>
-      <div class="glcaption" id="glCaption">Real models, CC0. See credits below the viewer.</div>
+      <div class="glcaption" id="glCaption">Parametric plant room, generated live from your numbers. Click a component for its properties.</div>
       </div>
-      <p class="foot">The room shows real downloaded models: an outdoor AC unit, a straight duct run (rectangular or circular, following your Duct Sizer shape, straight sections of the set), and a straight run of industrial pipes. Take pressure drops from the calculators, never from the picture. Particle speed is proportional to the real velocity in each system.</p>
+      <p class="foot">The room is generated in your browser from primitives: no downloaded models. The duct network follows your Duct Sizer section, the pipe pair follows your Pipe Hydraulics bore, and both rebuild when the numbers change. Take pressure drops from the calculators, never from the picture. Particle speed is proportional to the real velocity in each system.</p>
     </div>
   </div>
 </section>
 
-  <p class="foot" style="margin-top:10px">3D models: Outdoor AC unit, Rectangular duct run, Circular duct run, Industrial pipe run, Ceiling fan: all CC0 from Poly Haven. Ducts and pipes show the straight sections of each set, arranged as one straight run. Each model is labelled by what it actually is. Full provenance in ASSETS.md.</p>
+  <p class="foot" style="margin-top:10px">Earlier versions of this viewer loaded downloaded CC0 models (Poly Haven sets, see ASSETS.md). They were static props: retired 2026-10-21 in favour of the parametric system above, which is sized by the calculators and can be sectioned, restyled and interrogated like a BIM view.</p>
 <footer class="sitefoot"><b>Design aid.</b> MEP Suits is a design-stage aid — do not issue anything for construction until a qualified engineer has checked it against the project spec, local code, and the manufacturer’s real data. Uncontrolled when printed.<p class="credit">Made by Darren Labs · Built by Darren Lieu · <a href="https://saweria.co/darren111" target="_blank" rel="noopener">Support on Saweria</a></p></footer>
 </main>
 </div>
@@ -1041,6 +1115,12 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
   // one straight pipe run on the right, near the ground. Only ONE duct
   // run is ever visible (rectangular OR circular, never both).
   var V="?v=20261020b"; // cache-bust tag for all viewer assets (stale phone caches)
+  /* RETIRED 2026-10-21 (Darren's direction): the GLB load path below
+     (modelDefs, arrangeRun, fitGroup, ensureLoader, loadModels_RETIRED,
+     pick_RETIRED) is dead code, kept only until the parametric BIM system
+     above has soaked. It is never called: init() calls buildBIM().
+     Delete the whole block in one pass when ready. The model files stay
+     in the repo untouched. */
   var modelDefs=[
     {key:"ac",     file:"models/ac-unit.glb"+V,            label:"Outdoor AC unit: real CC0 model from Poly Haven.",                          pos:[-4.3,0,-0.9],   box:[2.6,2.2,1.2]},
     {key:"ductR",  file:"models/duct-rectangular.glb"+V,    label:"Rectangular duct run: straight sections of the real CC0 set from Poly Haven.", pos:[-0.2,2.0,-1.1], box:[6.4,1.1,1.1], run:{keep:["modular_airduct_rectangular_01_single_01","modular_airduct_rectangular_01_double_01","modular_airduct_rectangular_01_tripple_01","modular_airduct_rectangular_01_half_01"],mode:"rotY"}},
@@ -1053,6 +1133,10 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
   var cam={theta:0.72, phi:1.05, r:12.8, cx:-0.4, cy:1.5, cz:0};
   var st={air:true, water:true};
   var lastKey="", lastSync=0, clock=null, loaderTried=false, modelsOK=false, fallbackShown=false;
+  var dimDirty=true, dimBox=null, overlayFrame=0;   // VIEWER-V3 overlay state
+  var _pv=null;   // projection scratch, created lazily: THREE may be absent
+                  // if the vendor script was blocked, and this IIFE must
+                  // survive that to show the fallback (see init()).
   var reduced = (typeof matchMedia!=="undefined") && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var raycaster=null, pointerNDC=null;
   function el(id){return document.getElementById(id);}
@@ -1072,33 +1156,439 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     var d=ductDims();
     return d.shape+"|"+(d.shape==="round"?d.r:d.w+"x"+d.h)+"|"+pipeD().toFixed(4);
   }
-  function makeLabel(text,x,y,z,scale){
-    var c=document.createElement("canvas"); c.width=640; c.height=104;
-    var g=c.getContext("2d"); g.font="700 46px monospace"; g.textAlign="center"; g.textBaseline="middle";
-    g.fillStyle="rgba(9,13,19,0.55)"; var w=g.measureText(text).width+44;
-    g.beginPath(); g.rect(320-w/2,14,w,76); g.fill();
-    g.fillStyle="#0f6a5e"; g.fillRect(320-w/2,14,6,76);
-    g.fillStyle="#eef1f5"; g.fillText(text,320,54);
-    var tex=new THREE.CanvasTexture(c);
-    var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false,toneMapped:false}));
-    sp.position.set(x,y,z); sp.scale.set(2.3*(scale||1),0.375*(scale||1),1);
-    return sp;
+  /* ================= PARAMETRIC BIM SYSTEM (2026-10-21) =================
+     The downloaded GLB props (modelDefs / loadModels_RETIRED further down)
+     are retired per Darren's direction: static models could not be sized,
+     sectioned or interrogated. This system generates the plant room from
+     primitives, sized live by the Duct Sizer and Pipe Hydraulics, with
+     BIM-style view, detail and visual-style controls in the sidebar. */
+  var BIM_Y=2.42, BIM_Z=-1.1;                 // duct centreline (y, z)
+  var bim={view:"3d", detail:"medium", style:"realistic", air:true, water:true,
+           supports:true, insulPipe:false, insulDuct:false};
+  var bimRoot=null, MATS_ALL=[], CLIP_MATS=[], MAT={}, bgTex=null, fogObj=null, HL_BG=null;
+  var camAnim=null, camUp=[0,1,0], clipOn=false, clipPlane=null;
+  var selHelper=null, rebuildTimer=null;
+  var state={dimMesh:null};
+  function M(opts, envI){
+    var m=new THREE.MeshStandardMaterial(opts);
+    if(envTex){ m.envMap=envTex; m.envMapIntensity=(envI==null?0.9:envI); }
+    m.userData.envI=(envI==null?0.9:envI);
+    MATS_ALL.push(m); CLIP_MATS.push(m); return m;
+  }
+  function buildMaterials(){
+    MAT.galv   =M({color:0xb8c0c8, metalness:0.85, roughness:0.38});
+    MAT.galvDk =M({color:0x848e99, metalness:0.8,  roughness:0.45});
+    MAT.galvDS =M({color:0xb8c0c8, metalness:0.85, roughness:0.38, side:THREE.DoubleSide});
+    MAT.trim   =M({color:0x5d6873, metalness:0.7,  roughness:0.5});
+    MAT.casing =M({color:0xdfe3e6, metalness:0.35, roughness:0.52});
+    MAT.panel  =M({color:0xc7ccd1, metalness:0.4,  roughness:0.5});
+    MAT.coil   =M({color:0x9fb6c1, metalness:0.9,  roughness:0.32});
+    MAT.coilDk =M({color:0x39424b, metalness:0.6,  roughness:0.6});
+    MAT.fanDk  =M({color:0x2f363d, metalness:0.5,  roughness:0.55});
+    MAT.steel  =M({color:0xa9b2ba, metalness:0.9,  roughness:0.3});
+    MAT.clad   =M({color:0xe9e5db, metalness:0.05, roughness:0.85});
+    MAT.foil   =M({color:0xc9ccce, metalness:0.65, roughness:0.48});
+    MAT.valve  =M({color:0x37506b, metalness:0.6,  roughness:0.45});
+    MAT.wheel  =M({color:0xb3392f, metalness:0.3,  roughness:0.5});
+    MAT.volute =M({color:0x44586a, metalness:0.55, roughness:0.48});
+    MAT.motor  =M({color:0x2f5d8a, metalness:0.45, roughness:0.5});
+    MAT.plinth =M({color:0x9aa0a4, metalness:0.0,  roughness:0.95});
+    MAT.hidden =new THREE.MeshBasicMaterial({color:0xf2f5f7});
+    MAT.edge   =new THREE.LineBasicMaterial({color:0x2c4258});
+    HL_BG=new THREE.Color(0xf7f9fa);
+  }
+  function box(w,h,d,mat,x,y,z,parent){
+    var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+    m.position.set(x,y,z); m.castShadow=true; m.receiveShadow=true;
+    if(parent) parent.add(m); return m;
+  }
+  function cyl(rt,rb,h,mat,x,y,z,parent,axis,seg){
+    var m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||20),mat);
+    if(axis==="x") m.rotation.z=Math.PI/2; else if(axis==="z") m.rotation.x=Math.PI/2;
+    m.position.set(x,y,z); m.castShadow=true; m.receiveShadow=true;
+    if(parent) parent.add(m); return m;
+  }
+  function tor(r,t,mat,x,y,z,parent,rx,ry,arc,seg){
+    var m=new THREE.Mesh(new THREE.TorusGeometry(r,t,10,seg||28,arc||Math.PI*2),mat);
+    m.rotation.set(rx||0,ry||0,0); m.position.set(x,y,z); m.castShadow=true;
+    if(parent) parent.add(m); return m;
+  }
+  function tagComp(g,key){ g.userData.comp=key; g.traverse(function(o){ o.userData.comp=key; }); }
+  function buildUnit(){
+    var g=new THREE.Group(); g.position.set(-4.2,0,-0.55);
+    [[-0.95,-0.38],[0.95,-0.38],[-0.95,0.38],[0.95,0.38]].forEach(function(p){ box(0.2,0.14,0.2,MAT.plinth,p[0],0.07,p[1],g); });
+    box(2.3,1.7,1.05,MAT.casing,0,0.99,0,g);
+    box(2.36,0.05,1.11,MAT.trim,0,1.865,0,g);
+    box(0.014,1.6,0.014,MAT.trim,-0.38,0.99,0.533,g);
+    box(0.014,1.6,0.014,MAT.trim,0.42,0.99,0.533,g);
+    box(1.06,1.24,0.05,MAT.coilDk,-0.52,0.99,0.53,g);
+    var fins=new THREE.Group(); g.add(fins);
+    for(var i=0;i<26;i++){ box(0.014,1.18,0.02,MAT.coil,-1.0+i*0.0385,0.99,0.56,fins); }
+    cyl(0.40,0.40,0.045,MAT.fanDk,0.66,1.06,0.545,g,"z",28);
+    [0.34,0.25,0.16].forEach(function(r){ tor(r,0.011,MAT.trim,0.66,1.06,0.578,g); });
+    cyl(0.07,0.07,0.06,MAT.trim,0.66,1.06,0.578,g,"z",16);
+    var spokes=new THREE.Group(); spokes.position.set(0.66,1.06,0.572); g.add(spokes);
+    for(var s2=0;s2<3;s2++){ var sp=box(0.74,0.02,0.012,MAT.trim,0,0,0,spokes); sp.rotation.z=s2*Math.PI/3; }
+    box(0.03,0.95,0.62,MAT.panel,1.165,0.95,0.02,g);
+    box(0.05,0.05,0.2,MAT.trim,1.19,0.95,-0.18,g);
+    g.userData.det={medium:[],fine:[fins,spokes]};
+    tagComp(g,"unit");
+    return g;
+  }
+  function flangeRect(x,cy,cz,W,H,parent){
+    var f=new THREE.Group();
+    box(0.045,0.05,W+0.1,MAT.galvDk,x,cy+H/2+0.025,cz,f);
+    box(0.045,0.05,W+0.1,MAT.galvDk,x,cy-H/2-0.025,cz,f);
+    box(0.045,H+0.1,0.05,MAT.galvDk,x,cy,cz+W/2+0.025,f);
+    box(0.045,H+0.1,0.05,MAT.galvDk,x,cy,cz-W/2-0.025,f);
+    parent.add(f); return f;
+  }
+  function frustumMesh(x0,x1,cy,cz,H,W,r,mat){
+    var s=r/Math.SQRT2;
+    var c=[[-H/2,-W/2],[-H/2,W/2],[H/2,W/2],[H/2,-W/2]];
+    var q=[[-s,-s],[-s,s],[s,s],[s,-s]];
+    var pos=[];
+    function tri(a,b,cc){ pos.push(a[0],a[1],a[2], b[0],b[1],b[2], cc[0],cc[1],cc[2]); }
+    for(var i=0;i<4;i++){ var j=(i+1)%4;
+      var A=[x0,cy+c[i][0],cz+c[i][1]], B=[x0,cy+c[j][0],cz+c[j][1]],
+          C=[x1,cy+q[j][0],cz+q[j][1]], D=[x1,cy+q[i][0],cz+q[i][1]];
+      tri(A,B,C); tri(A,C,D);
+    }
+    var geo=new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(pos),3));
+    geo.computeVertexNormals();
+    var m=new THREE.Mesh(geo,mat); m.castShadow=true; return m;
+  }
+  function elbowSeg(parent,mat,isRect,bw,bh,rb,x,cy,zc,R,th){
+    var y=(cy-R)+R*Math.cos(th), z=zc+R*Math.sin(th), len=R*(Math.PI/8)*1.2;
+    if(isRect){ var m=box(bw,bh,len,mat,x,y,z,parent); m.rotation.x=th; return m; }
+    var c=cyl(rb,rb,len,mat,x,y,z,parent,"y",16); c.rotation.set(th+Math.PI/2,0,0); return c;
+  }
+  function branchRect(g,det,bx0,cy,cz,W,H,withDrop){
+    var bw=clamp(0.8*W,0.3,0.68), bh=clamp(0.85*H,0.2,0.5), zF=cz+W/2;
+    var col=box(bw+0.07,bh+0.07,0.12,MAT.galvDk,bx0,cy,zF+0.03,g); det.medium.push(col);
+    if(!withDrop){
+      box(bw,bh,1.15,MAT.galv,bx0,cy,zF+0.6,g);
+      box(bw+0.03,bh+0.03,0.035,MAT.galvDk,bx0,cy,zF+1.19,g);
+      return;
+    }
+    box(bw,bh,0.62,MAT.galv,bx0,cy,zF+0.31,g);
+    var R=0.5, zc=zF+0.6;
+    for(var k=0;k<4;k++){ elbowSeg(g,MAT.galv,true,bw,bh,0,bx0,cy,zc,R,(k+0.5)*Math.PI/8); }
+    var dropZ=zc+R;
+    box(bw,0.78,bh,MAT.galv,bx0,cy-R-0.33,dropZ,g);
+    box(bw+0.03,0.035,bh+0.03,MAT.galvDk,bx0,cy-R-0.74,dropZ,g);
+  }
+  function branchRound(g,det,bx0,cy,cz,R,withDrop){
+    var rb=clamp(R*0.66,0.11,0.3), zF=cz+R;
+    var col=tor(rb+0.012,0.018,MAT.galvDk,bx0,cy,zF+0.02,g); det.medium.push(col);
+    if(!withDrop){
+      cyl(rb,rb,1.15,MAT.galv,bx0,cy,zF+0.6,g,"z",18);
+      cyl(rb+0.012,rb+0.012,0.035,MAT.galvDk,bx0,cy,zF+1.19,g,"z",18);
+      return;
+    }
+    cyl(rb,rb,0.62,MAT.galv,bx0,cy,zF+0.31,g,"z",18);
+    var Rr=0.45, zc=zF+0.6;
+    for(var k=0;k<4;k++){ elbowSeg(g,MAT.galv,false,0,0,rb,bx0,cy,zc,Rr,(k+0.5)*Math.PI/8); }
+    cyl(rb,rb,0.78,MAT.galv,bx0,cy-Rr-0.33,zc+Rr,g,"y",18);
+    cyl(rb+0.012,rb+0.012,0.035,MAT.galvDk,bx0,cy-Rr-0.74,zc+Rr,g,"y",18);
+  }
+  function buildDuct(g){
+    var d=ductDims(), cy=BIM_Y, cz=BIM_Z, det={medium:[],fine:[]};
+    var insul=new THREE.Group(); insul.visible=bim.insulDuct; g.add(insul); g.userData.insul=insul;
+    if(d.shape==="rect"){
+      var W=d.w, H=d.h;
+      var segs=[[-3.05,-1.2],[-1.2,0.65],[0.65,2.55]];
+      segs.forEach(function(s,i){
+        var m=box(s[1]-s[0],H,W,MAT.galv,(s[0]+s[1])/2,cy,cz,g);
+        box(s[1]-s[0]+0.02,H+0.07,W+0.07,MAT.foil,(s[0]+s[1])/2,cy,cz,insul);
+        if(i===0) state.dimMesh=m;
+      });
+      box(0.55,H*0.92,W*0.92,MAT.galv,-3.32,cy,cz,g);
+      [-3.02,-1.2,0.65].forEach(function(x){ det.medium.push(flangeRect(x,cy,cz,W,H,g)); });
+      var rD=clamp(val("dD",630)/2000,0.09,0.55);
+      var fr=frustumMesh(2.55,3.08,cy,cz,H,W,rD,MAT.galvDS); g.add(fr);
+      cyl(rD,rD,0.85,MAT.galv,3.5,cy,cz,g,"x",24);
+      cyl(rD+0.012,rD+0.012,0.035,MAT.galvDk,3.94,cy,cz,g,"x",24);
+      branchRect(g,det,-0.85,cy,cz,W,H,true);
+      branchRect(g,det, 1.55,cy,cz,W,H,false);
+    } else {
+      var R=d.r;
+      var main=cyl(R,R,5.6,MAT.galv,-0.25,cy,cz,g,"x",30); state.dimMesh=main;
+      cyl(R+0.01,R+0.01,0.035,MAT.galvDk,2.57,cy,cz,g,"x",30);
+      [-1.2,0.65].forEach(function(x){ var t=tor(R+0.014,0.02,MAT.galvDk,x,cy,cz,g,0,Math.PI/2); det.medium.push(t); });
+      branchRound(g,det,-0.85,cy,cz,R,true);
+      branchRound(g,det, 1.55,cy,cz,R,false);
+    }
+    g.userData.det=det; tagComp(g,"duct");
+  }
+  function elbowPipe(parent,cx,cyv,z,r,rotZ){
+    var t=tor(0.22,r,MAT.steel,cx,cyv,z,parent,0,0,Math.PI/2,14);
+    t.rotation.z=rotZ; return t;
+  }
+  function gateValve(g,det,x,y,z,r){
+    var v=new THREE.Group(); v.position.set(x,y,z); g.add(v);
+    cyl(r*1.5,r*1.5,0.36,MAT.valve,0,0,0,v,"x",18);
+    var f1=cyl(r*1.62,r*1.62,0.035,MAT.valve,-0.19,0,0,v,"x",18);
+    var f2=cyl(r*1.62,r*1.62,0.035,MAT.valve,0.19,0,0,v,"x",18);
+    det.medium.push(f1,f2);
+    cyl(r*0.55,r*0.55,0.15,MAT.valve,0,r*1.5+0.06,0,v,"y",14);
+    cyl(0.016,0.016,0.16,MAT.trim,0,r*1.5+0.2,0,v,"y",8);
+    var wy=r*1.5+0.32;
+    tor(0.115,0.017,MAT.wheel,0,wy,0,v,Math.PI/2,0);
+    cyl(0.03,0.03,0.05,MAT.trim,0,wy,0,v,"y",10);
+    var spokes=new THREE.Group(); spokes.position.set(0,wy,0); v.add(spokes);
+    for(var i=0;i<3;i++){ var sp=box(0.21,0.013,0.013,MAT.wheel,0,0,0,spokes); sp.rotation.y=i*Math.PI/3; }
+    det.fine.push(spokes);
+    return v;
+  }
+  function checkValve(g,det,x,y,z,r){
+    var v=new THREE.Group(); v.position.set(x,y,z); g.add(v);
+    cyl(r*1.58,r*1.58,0.3,MAT.valve,0,0,0,v,"x",18);
+    box(0.16,0.045,0.1,MAT.trim,0,r*1.58+0.03,0,v);
+    return v;
+  }
+  function buildPipes(g){
+    var d=pipeD(), r=Math.max(d/2+0.006,0.027), z=1.6, yS=0.98, yR=0.74;
+    var det={medium:[],fine:[]};
+    var insul=new THREE.Group(); insul.visible=bim.insulPipe; g.add(insul); g.userData.insul=insul;
+    [{y:yS,end:2.78},{y:yR,end:3.13}].forEach(function(p){
+      var len=p.end-(-2.7), cx=(-2.7+p.end)/2;
+      cyl(r,r,len,MAT.steel,cx,p.y,z,g,"x",20);
+      cyl(r+0.038,r+0.038,len-0.1,MAT.clad,cx,p.y,z,insul,"x",20);
+      elbowPipe(g,-2.70,p.y-0.22,z,r,Math.PI/2);
+      cyl(r,r,p.y-0.22,MAT.steel,-2.92,(p.y-0.22)/2,z,g,"y",16);
+    });
+    elbowPipe(g,2.78,yS-0.22,z,r,0);
+    cyl(r,r,0.36,MAT.steel,3.0,0.58,z,g,"y",16);
+    cyl(r,r,0.3,MAT.steel,3.14,0.42,z,g,"x",16);
+    elbowPipe(g,3.13,yR-0.22,z,r,0);
+    cyl(r,r,0.52,MAT.steel,3.35,0.26,z,g,"y",16);
+    gateValve(g,det,-1.3,yS,z,r); gateValve(g,det,0.35,yR,z,r); gateValve(g,det,1.9,yS,z,r);
+    checkValve(g,det,1.15,yR,z,r);
+    g.userData.det=det; tagComp(g,"pipes");
+  }
+  function buildPump(g){
+    var z=1.6;
+    box(1.2,0.16,0.9,MAT.plinth,3.62,0.08,z,g);
+    cyl(0.27,0.27,0.24,MAT.volute,3.4,0.44,z,g,"x",24);
+    tor(0.19,0.02,MAT.trim,3.27,0.44,z,g,0,Math.PI/2);
+    box(0.3,0.2,0.3,MAT.volute,3.4,0.2,z,g);
+    cyl(0.17,0.17,0.8,MAT.motor,3.93,0.44,z,g,"x",20);
+    box(0.18,0.12,0.16,MAT.fanDk,3.93,0.66,z,g);
+    box(0.5,0.14,0.24,MAT.plinth,3.93,0.07,z,g);
+    var fins=new THREE.Group(); g.add(fins);
+    for(var i=0;i<6;i++){ var f=box(0.7,0.37,0.015,MAT.motor,3.93,0.44,z,fins); f.rotation.x=i*Math.PI/3; }
+    g.userData.det={medium:[],fine:[fins]};
+    tagComp(g,"pump");
+  }
+  function buildSupports(g){
+    var d=ductDims(), cy=BIM_Y, cz=BIM_Z;
+    var H=(d.shape==="rect")? d.h : d.r*2, W=(d.shape==="rect")? d.w : d.r*2;
+    [-2.2,0.2,2.2].forEach(function(x){
+      var topY=cy-H/2-0.05, rodLen=4.35-topY;
+      box(0.05,0.05,W+0.36,MAT.trim,x,cy-H/2-0.075,cz,g);
+      cyl(0.011,0.011,rodLen,MAT.trim,x,topY+rodLen/2,cz-(W/2+0.15),g,"y",8);
+      cyl(0.011,0.011,rodLen,MAT.trim,x,topY+rodLen/2,cz+(W/2+0.15),g,"y",8);
+    });
+    [-1.9,-0.1,1.7].forEach(function(x){
+      box(0.07,0.68,0.07,MAT.trim,x,0.34,1.6,g);
+      box(0.12,0.05,0.34,MAT.trim,x,0.7,1.6,g);
+    });
+    tagComp(g,"supports");
+  }
+  function disposeDeep(o){ o.traverse(function(n){ if(n.geometry) n.geometry.dispose(); }); }
+  function clearGroup(g){ while(g.children.length){ var c=g.children[0]; g.remove(c); disposeDeep(c); } }
+  function buildBIM(){
+    buildMaterials();
+    bimRoot=new THREE.Group(); scene.add(bimRoot);
+    modelGroups.unit=buildUnit(); bimRoot.add(modelGroups.unit);
+    modelGroups.pump=new THREE.Group(); buildPump(modelGroups.pump); bimRoot.add(modelGroups.pump);
+    modelGroups.duct=new THREE.Group(); bimRoot.add(modelGroups.duct);
+    modelGroups.pipes=new THREE.Group(); bimRoot.add(modelGroups.pipes);
+    modelGroups.supports=new THREE.Group(); bimRoot.add(modelGroups.supports);
+    rebuildDuct(); rebuildPipes();
+    modelsOK=true; dimDirty=true;
+    var w=el("glWrap"); if(w) w.classList.add("live");
+    applySystems(); applyStyle();
+  }
+  function rebuildDuct(){
+    var g=modelGroups.duct; if(!g) return;
+    clearGroup(g); buildDuct(g);
+    var s=modelGroups.supports;
+    if(s){ clearGroup(s); buildSupports(s); }
+    clearSelection(); dimDirty=true; applyDetail();
+    if(bim.style==="hiddenline") applyStyle();
+  }
+  function rebuildPipes(){
+    var g=modelGroups.pipes; if(!g) return;
+    clearGroup(g); buildPipes(g);
+    clearSelection(); applyDetail();
+    if(bim.style==="hiddenline") applyStyle();
+  }
+  function scheduleRebuild(){
+    if(rebuildTimer) clearTimeout(rebuildTimer);
+    rebuildTimer=setTimeout(function(){ if(bimRoot){ rebuildDuct(); rebuildPipes(); } },240);
+  }
+  function applyDetail(){
+    ["unit","duct","pipes","pump"].forEach(function(k){
+      var g=modelGroups[k]; if(!g || !g.userData.det) return;
+      g.userData.det.medium.forEach(function(n){ n.visible=(bim.detail!=="coarse"); });
+      g.userData.det.fine.forEach(function(n){ n.visible=(bim.detail==="fine"); });
+    });
+  }
+  function applySystems(){
+    if(modelGroups.unit) modelGroups.unit.visible=bim.air;
+    if(modelGroups.duct) modelGroups.duct.visible=bim.air;
+    if(modelGroups.pipes) modelGroups.pipes.visible=bim.water;
+    if(modelGroups.pump) modelGroups.pump.visible=bim.water;
+    if(modelGroups.supports) modelGroups.supports.visible=bim.supports;
+    if(modelGroups.pipes && modelGroups.pipes.userData.insul) modelGroups.pipes.userData.insul.visible=bim.insulPipe;
+    if(modelGroups.duct && modelGroups.duct.userData.insul) modelGroups.duct.userData.insul.visible=bim.insulDuct;
+  }
+  function ensureEdges(){
+    if(!bimRoot) return;
+    bimRoot.traverse(function(o){
+      if(o.isMesh && !o.userData.edges){
+        var e=new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry,24), MAT.edge);
+        e.visible=false; o.add(e); o.userData.edges=e;
+      }
+    });
+  }
+  function setEdges(v){ if(!bimRoot) return; bimRoot.traverse(function(o){ if(o.userData && o.userData.edges) o.userData.edges.visible=v; }); }
+  function applyClip(){
+    var arr=clipOn? [clipPlane] : null;
+    CLIP_MATS.forEach(function(m){ m.clippingPlanes=arr; m.needsUpdate=true; });
+    if(MAT.hidden){ MAT.hidden.clippingPlanes=arr; MAT.hidden.needsUpdate=true; }
+  }
+  function applyStyle(){
+    if(!scene) return;
+    var s=bim.style, hl=(s==="hiddenline");
+    if(hl) ensureEdges();
+    if(bimRoot) bimRoot.traverse(function(o){
+      if(!o.isMesh) return;
+      if(hl){ if(!o.userData.m0) o.userData.m0=o.material; o.material=MAT.hidden; }
+      else if(o.userData.m0){ o.material=o.userData.m0; o.userData.m0=null; }
+    });
+    setEdges(hl);
+    MATS_ALL.forEach(function(m){
+      m.wireframe=(s==="wireframe");
+      if(m.isMeshStandardMaterial) m.envMapIntensity=(s==="realistic")? m.userData.envI : 0.22;
+    });
+    if(renderer) renderer.toneMappingExposure=(s==="realistic")? 1.05 : 1.0;
+    scene.background=hl? HL_BG : bgTex;
+    scene.fog=hl? null : fogObj;
+    applyClip();
+  }
+  var VIEWS={
+    "3d":{theta:0.72,phi:1.05,r:12.8,cx:-0.4,cy:1.5,cz:0,up:[0,1,0],clip:false},
+    "plan":{theta:0.0,phi:0.06,r:19.0,cx:-0.45,cy:0.0,cz:0.2,up:[0,0,-1],clip:false},
+    "section":{theta:0.0,phi:1.30,r:11.0,cx:-0.2,cy:1.7,cz:-0.3,up:[0,1,0],clip:true},
+    "elevation":{theta:Math.PI/2,phi:1.32,r:11.5,cx:-0.2,cy:1.6,cz:0,up:[0,1,0],clip:false}
+  };
+  function applyView(name, instant){
+    var v=VIEWS[name]; if(!v) return;
+    bim.view=name; camUp=v.up.slice();
+    clipOn=!!v.clip; applyClip();
+    if(instant || reduced){ camAnim=null; ["theta","phi","r","cx","cy","cz"].forEach(function(k){ cam[k]=v[k]; }); return; }
+    camAnim={from:{theta:cam.theta,phi:cam.phi,r:cam.r,cx:cam.cx,cy:cam.cy,cz:cam.cz},
+             to:{theta:v.theta,phi:v.phi,r:v.r,cx:v.cx,cy:v.cy,cz:v.cz}, t:0, dur:0.9};
+  }
+  function txtOf(id){ var e=el(id); return e? e.textContent.replace(/\s+/g," ").trim() : "—"; }
+  function inOf(id, unit){ var e=el(id); var v=e? String(e.value).trim() : ""; return v? (v+" "+unit) : "—"; }
+  function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+  var PROPS={
+    unit:{name:function(){ return "AHU-1 · Outdoor unit"; }, type:"Coil and fan unit",
+      size:function(){ return "Casing 2.3 × 1.7 × 1.05 m"; },
+      calc:function(){ return [["Airflow (Duct Sizer)",inOf("dQ","L/s")],["Duct velocity",txtOf("dVel")]]; }},
+    duct:{name:function(){ return ductDims().shape==="rect"? "Duct network · rectangular" : "Duct network · circular"; },
+      type:"Galvanised ductwork, generated from the Duct Sizer section",
+      size:function(){ var d=ductDims(); return d.shape==="rect"? (Math.round(d.w*1000)+" × "+Math.round(d.h*1000)+" mm") : ("Ø "+Math.round(d.r*2000)+" mm"); },
+      calc:function(){ return [["Air velocity",txtOf("dVel")],["Airflow",inOf("dQ","L/s")],["Friction rate",txtOf("dFric")]]; }},
+    pipes:{name:function(){ return "CHW pipe pair"; }, type:"Chilled-water supply and return",
+      size:function(){ return "Bore ID "+(pipeD()*1000).toFixed(1)+" mm"; },
+      calc:function(){ return [["Water velocity",txtOf("wVel")],["Flow",inOf("wQ","L/s")]]; }},
+    pump:{name:function(){ return "Pump set P-1"; }, type:"End-suction pump on plinth",
+      size:function(){ return "Sized by the pipe pair it serves"; },
+      calc:function(){ return [["Duty head (Pipe Hydraulics)",txtOf("wHead")],["Shaft power",txtOf("wPow")]]; }},
+    supports:{name:function(){ return "Supports and hangers"; }, type:"Trapeze hangers and pipe posts",
+      size:function(){ return ""; }, calc:function(){ return []; }}
+  };
+  function showProps(key){
+    var p=PROPS[key], bx2=el("bimProps"); if(!p||!bx2) return;
+    var rows=[["Type",p.type]], sz=p.size();
+    if(sz) rows.push(["Size",sz]);
+    p.calc().forEach(function(r){ rows.push(r); });
+    var h='<span class="bpname">'+esc(p.name())+'</span>';
+    rows.forEach(function(r){ h+='<div class="bprow"><span>'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></div>'; });
+    bx2.innerHTML=h;
+  }
+  function clearSelection(){
+    if(selHelper && scene){ scene.remove(selHelper); if(selHelper.geometry) selHelper.geometry.dispose(); }
+    selHelper=null;
+  }
+  function pick(e){
+    if(!renderer||!camera||!bimRoot) return;
+    if(!raycaster){ raycaster=new THREE.Raycaster(); pointerNDC=new THREE.Vector2(); }
+    var r=renderer.domElement.getBoundingClientRect();
+    pointerNDC.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1);
+    raycaster.setFromCamera(pointerNDC, camera);
+    var hits=raycaster.intersectObjects(bimRoot.children, true);
+    var cap=el("glCaption");
+    clearSelection();
+    if(!hits.length){ if(cap) cap.textContent="Parametric plant room, generated live from your numbers. Click a component for its properties."; return; }
+    var o=hits[0].object, key=null;
+    while(o){ if(o.userData && o.userData.comp){ key=o.userData.comp; break; } o=o.parent; }
+    if(!key || !PROPS[key]) return;
+    var grp=modelGroups[key];
+    if(grp){ selHelper=new THREE.BoxHelper(grp, 0xea580c); scene.add(selHelper); }
+    showProps(key);
+    if(cap) cap.textContent=PROPS[key].name()+" — properties in the panel.";
+  }
+  function segWire(id, fn){
+    var c=el(id); if(!c) return;
+    c.querySelectorAll("button").forEach(function(b){
+      b.addEventListener("click", function(){
+        c.querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x===b); });
+        fn(b.dataset.v);
+      });
+    });
+  }
+  function tglWire(id, fn){
+    var b=el(id); if(!b) return;
+    b.addEventListener("click", function(){
+      var on=!b.classList.contains("on");
+      b.classList.toggle("on", on); b.textContent=on? "ON" : "OFF"; fn(on);
+    });
+  }
+  function bindBimUI(){
+    segWire("bimView", function(v){ applyView(v,false); });
+    segWire("bimDetail", function(v){ bim.detail=v; applyDetail(); });
+    segWire("bimStyle", function(v){ bim.style=v; applyStyle(); });
+    tglWire("tglSysAir", function(on){ bim.air=on; applySystems(); });
+    tglWire("tglSysWater", function(on){ bim.water=on; applySystems(); });
+    tglWire("tglSupports", function(on){ bim.supports=on; applySystems(); });
+    tglWire("tglInsulP", function(on){ bim.insulPipe=on; applySystems(); });
+    tglWire("tglInsulD", function(on){ bim.insulDuct=on; applySystems(); });
   }
   function buildStatic(){
-    // Large dark concrete-style floor — receives shadows, no grid clutter.
-    var floor=new THREE.Mesh(new THREE.PlaneGeometry(34,22), new THREE.MeshStandardMaterial({color:0x252b32,roughness:0.95,metalness:0,envMap:envTex,envMapIntensity:0.35}));
+    // VIEWER-V3: Revit-style viewport ground — a light slab with a true
+    // 1 m grid aligned to the room, so the view reads as a CAD model view
+    // and equipment scale can be judged against the grid. Component tags
+    // are HTML overlays now (see updateOverlay), not sprites.
+    var floor=new THREE.Mesh(new THREE.PlaneGeometry(34,22), new THREE.MeshStandardMaterial({color:0xccd3da,roughness:0.97,metalness:0,envMap:envTex,envMapIntensity:0.25}));
     floor.rotation.x=-Math.PI/2; floor.position.set(0,0,0); floor.receiveShadow=true; scene.add(floor);
-    scene.add(makeLabel("OUTDOOR AC UNIT",-4.3,2.35,-0.9,1));
-    scene.add(makeLabel("DUCT RUN",-0.2,3.55,-1.1,1));
-    scene.add(makeLabel("PIPE RUN",1.2,1.85,1.6,0.9));
-    scene.add(makeLabel("CEILING FAN",0.5,4.85,0.8,0.9));
+    MATS_ALL.push(floor.material); floor.material.userData.envI=0.25;
+    var grid=new THREE.GridHelper(24,24,0x8fa0ae,0xb4bfc9);
+    grid.position.y=0.01; grid.material.transparent=true; grid.material.opacity=0.6; grid.material.depthWrite=false;
+    scene.add(grid);
     // Airflow path follows the duct centreline (y 2.35 sits inside both the
     // rectangular run, 2.0–2.82, and the circular run, 2.0–2.54).
     pathPts=[]; cumLen=[]; totalLen=0;
     function push(x,y,z){ var p=new THREE.Vector3(x,y,z);
       if(pathPts.length){ totalLen+=p.distanceTo(pathPts[pathPts.length-1]); }
       pathPts.push(p); cumLen.push(totalLen); }
-    push(-3.2,2.35,-1.1); push(3.0,2.35,-1.1);
+    push(-3.2,BIM_Y,-1.1); push(3.0,BIM_Y,-1.1);
   }
   function samplePath(dist){
     dist=((dist%totalLen)+totalLen)%totalLen;
@@ -1172,7 +1662,7 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     }
     tryNext(0);
   }
-  function loadModels(){
+  function loadModels_RETIRED(){
     ensureLoader(function(){
       var loader=new THREE.GLTFLoader();
       var pending=modelDefs.length, failed=0;
@@ -1194,7 +1684,7 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
           grp.visible = (def.key!=="ductR" && def.key!=="ductC") ? true : (def.key==="ductR" ? ductDims().shape!=="round" : ductDims().shape==="round");
           scene.add(grp);
           modelGroups[def.key]=grp;
-          if(--pending===0){ modelsOK=true; }
+          if(--pending===0){ modelsOK=true; dimDirty=true; var w=el("glWrap"); if(w) w.classList.add("live"); }
         }, undefined, function(){
           failed++;
           pending--;
@@ -1208,24 +1698,25 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     // The floor/labels/particles still render; every calculator keeps working.
     if(fallbackShown) return; fallbackShown=true;
     var fb=el("glFallback");
-    if(fb){ fb.style.display="grid"; fb.innerHTML="3D models could not load - connection issue (viewer v3). Try a hard reload; the page no longer needs any CDN.<br>Every calculator still works in 2D."; }
+    if(fb){ fb.style.display="grid"; fb.innerHTML="The 3D view could not start in this browser (viewer v4).<br>Every calculator still works in 2D."; }
     var cap=el("glCaption");
-    if(cap) cap.textContent="3D models could not load (viewer v3 - connection issue). Every calculator still works.";
+    if(cap) cap.textContent="The 3D view could not start in this browser. Every calculator still works.";
   }
   function refreshDuctVisibility(){
-    var round = ductDims().shape==="round";
-    if(modelGroups.ductR) modelGroups.ductR.visible=!round;
-    if(modelGroups.ductC) modelGroups.ductC.visible=round;
+    // BIM system: a calculator change rebuilds the affected groups
+    // (debounced inside scheduleRebuild), which also re-measures the
+    // dimension callout via dimDirty.
+    scheduleRebuild();
   }
   function makeParticles(){
     var N=240, pos=new Float32Array(N*3), geo=new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(pos,3));
-    airPts=new THREE.Points(geo, new THREE.PointsMaterial({color:0x5db9ff,size:0.085,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false}));
+    airPts=new THREE.Points(geo, new THREE.PointsMaterial({color:0x1d4ed8,size:0.095,transparent:true,opacity:0.92,depthWrite:false}));
     airOff=[]; for(var i=0;i<N;i++) airOff.push(Math.random());
     scene.add(airPts);
     var M=110, pos2=new Float32Array(M*3), geo2=new THREE.BufferGeometry();
     geo2.setAttribute("position", new THREE.BufferAttribute(pos2,3));
-    waterPts=new THREE.Points(geo2, new THREE.PointsMaterial({color:0x2fe0bd,size:0.07,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false}));
+    waterPts=new THREE.Points(geo2, new THREE.PointsMaterial({color:0x0e7490,size:0.08,transparent:true,opacity:0.92,depthWrite:false}));
     waterOff=[]; for(var j=0;j<M;j++) waterOff.push(Math.random());
     scene.add(waterPts);
   }
@@ -1234,13 +1725,13 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     wire("tglAir","air",function(){ if(airPts)airPts.visible=st.air; });
     wire("tglWater","water",function(){ if(waterPts)waterPts.visible=st.water; });
     var cv=renderer.domElement, drag=false, px=0, py=0, moved=0;
-    cv.addEventListener("pointerdown",function(e){ drag=true; moved=0; px=e.clientX; py=e.clientY; cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener("pointerdown",function(e){ drag=true; moved=0; px=e.clientX; py=e.clientY; camAnim=null; cv.setPointerCapture(e.pointerId); });
     cv.addEventListener("pointermove",function(e){ if(!drag)return; moved+=Math.abs(e.clientX-px)+Math.abs(e.clientY-py); cam.theta-=(e.clientX-px)*0.005; cam.phi=clamp(cam.phi-(e.clientY-py)*0.005,0.08,1.5); px=e.clientX; py=e.clientY; });
     cv.addEventListener("pointerup",function(e){ drag=false; if(moved<6) pick(e); });
     cv.addEventListener("wheel",function(e){ e.preventDefault(); cam.r=clamp(cam.r+e.deltaY*0.012,5.5,22); },{passive:false});
     window.addEventListener("resize",resize);
   }
-  function pick(e){
+  function pick_RETIRED(e){ /* superseded by the BIM pick above */
     if(!renderer||!camera) return;
     if(!raycaster){ raycaster=new THREE.Raycaster(); pointerNDC=new THREE.Vector2(); }
     var r=renderer.domElement.getBoundingClientRect();
@@ -1253,15 +1744,27 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
   function resize(){
     if(!renderer||!wrap)return;
     var w=wrap.clientWidth, h=wrap.clientHeight; if(!w||!h)return;
+    // Narrow viewports (the two-column layout squeezes the wrap well below
+    // page width): the purpose strip wraps to two lines there, so the
+    // chips drop below it and the legend yields its space.
+    wrap.classList.toggle("narrow", w<720);
     renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();
   }
   function numFrom(id){ var t=el(id)?el(id).textContent:""; var v=parseFloat(t.replace(/[^0-9.]/g,"")); return isFinite(v)?v:0; }
+  function setText(id,txt){ var e=el(id); if(e && e.textContent!==txt) e.textContent=txt; }
   function syncReadouts(){
     var d=ductDims();
-    el("chipDuct").textContent = d.shape==="round" ? ("Ø "+Math.round(val("dD",630))+" mm") : (Math.round(val("dW",800))+" × "+Math.round(val("dH",300))+" mm");
-    el("chipAir").textContent = el("dVel")?el("dVel").textContent.trim():"-";
-    el("chipPipe").textContent = "ID "+(pipeD()*1000).toFixed(1)+" mm";
-    el("chipWater").textContent = el("wVel")?el("wVel").textContent.trim():"-";
+    var ductTxt = d.shape==="round" ? ("Ø "+Math.round(val("dD",630))+" mm") : (Math.round(val("dW",800))+" × "+Math.round(val("dH",300))+" mm");
+    var airTxt = el("dVel")?el("dVel").textContent.trim():"-";
+    var pipeTxt = "ID "+(pipeD()*1000).toFixed(1)+" mm";
+    var waterTxt = el("wVel")?el("wVel").textContent.trim():"-";
+    setText("chipDuct",ductTxt); setText("chipAir",airTxt); setText("chipPipe",pipeTxt); setText("chipWater",waterTxt);
+    // VIEWER-V3: the purpose strip and the drawing tags read the same
+    // live values, from the same place, so they can never disagree.
+    setText("ppDuct",ductTxt); setText("ppAir",airTxt); setText("ppPipe",pipeTxt); setText("ppWater",waterTxt);
+    setText("tagDuct","DUCT RUN · "+(d.shape==="round" ? ("Ø "+Math.round(val("dD",630))) : (Math.round(val("dW",800))+" × "+Math.round(val("dH",300)))));
+    setText("tagPipe","PIPE RUN · "+pipeTxt);
+    setText("tagDim", d.shape==="round" ? ("Ø "+Math.round(val("dD",630))) : (Math.round(val("dW",800))+" × "+Math.round(val("dH",300))));
   }
   function init(){
     // VIEWER-V2: THREE must exist before we mark init done. Previously
@@ -1279,8 +1782,21 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     renderer.toneMapping=THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure=1.05;
     renderer.physicallyCorrectLights=true;
+    renderer.localClippingEnabled=true; clipPlane=new THREE.Plane(new THREE.Vector3(0,0,1),1.05);
     wrap.insertBefore(renderer.domElement, wrap.firstChild);
-    scene=new THREE.Scene(); scene.background=new THREE.Color(0x0c1017); scene.fog=new THREE.Fog(0x0c1017,22,40);
+    scene=new THREE.Scene();
+    // VIEWER-V3: soft light-grey gradient backdrop, the way a Revit
+    // realistic view sits on the page — pale at the horizon line of the
+    // view, a touch deeper below it.
+    (function(){
+      var gc=document.createElement("canvas"); gc.width=4; gc.height=512;
+      var gg=gc.getContext("2d"); var gr=gg.createLinearGradient(0,0,0,512);
+      gr.addColorStop(0,"#eef1f4"); gr.addColorStop(0.55,"#dde3e8"); gr.addColorStop(1,"#c9d1d9");
+      gg.fillStyle=gr; gg.fillRect(0,0,4,512);
+      scene.background=new THREE.CanvasTexture(gc);
+    })();
+    scene.fog=new THREE.Fog(0xd9dfe5,26,48);
+    bgTex=scene.background; fogObj=scene.fog;
     camera=new THREE.PerspectiveCamera(42,1,0.1,100);
     // Image-based lighting: r128 ships no RoomEnvironment.js, so the same
     // idea is built inline — a dark room with emissive panels — and baked
@@ -1307,7 +1823,7 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
       scene.environment=envTex; // harmless on r128 (per-material envMap below does the work)
       pm.dispose();
     })();
-    scene.add(new THREE.HemisphereLight(0xbfd6e8,0x2a2620,0.5));
+    scene.add(new THREE.HemisphereLight(0xffffff,0x8d9299,0.65));
     var key=new THREE.DirectionalLight(0xfff1dd,1.5); key.position.set(7,11,6); key.castShadow=true;
     key.shadow.mapSize.set(2048,2048);
     key.shadow.camera.left=-8; key.shadow.camera.right=8; key.shadow.camera.top=8; key.shadow.camera.bottom=-8;
@@ -1316,20 +1832,104 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     scene.add(key);
     var fill=new THREE.DirectionalLight(0xffd9a8,0.45); fill.position.set(-6,4,7); scene.add(fill);
     var rim=new THREE.DirectionalLight(0x7db8ff,0.6); rim.position.set(-7,5,-8); scene.add(rim);
-    buildStatic(); makeParticles(); loadModels();
+    buildStatic(); makeParticles(); buildBIM(); bindBimUI();
     lastKey=syncKey(); syncReadouts();
     bindUI(); resize();
     if(camera.aspect<1) cam.r=17; // narrow viewport: pull back so the whole room fits
     clock=new THREE.Clock();
     animate();
   }
+  /* VIEWER-V3 overlay: Revit-style drawing furniture projected from the
+     3D scene into overlay space each frame (throttled to every 2nd frame,
+     transforms/attributes only — no layout reads beyond the cached wrap
+     size). Tags are white drawing tags with leader lines; the duct gets a
+     true dimension across the vertical edge of its end section, worded
+     with the live section size from the Duct Sizer. */
+  var tagDefs=[
+    {tag:"tagAC",   line:"ldAC",   key:"unit",  anchor:[-4.55,2.05,-0.55]},
+    {tag:"tagDuct", line:"ldDuct", key:"duct",  anchor:[1.1,3.55,-1.1]},
+    {tag:"tagPipe", line:"ldPipe", key:"pipes", anchor:[0.9,1.7,1.6]},
+    {tag:"tagPump", line:"ldPump", key:"pump",  anchor:[3.62,1.45,1.6]}
+  ];
+  function proj(x,y,z,out){
+    if(!_pv) _pv=new THREE.Vector3();
+    _pv.set(x,y,z).project(camera);
+    out.x=(_pv.x*0.5+0.5)*wrap.clientWidth; out.y=(-_pv.y*0.5+0.5)*wrap.clientHeight; out.behind=_pv.z>1;
+    return out;
+  }
+  function setLine(id,x1,y1,x2,y2){ var l=el(id); if(!l) return;
+    l.setAttribute("x1",x1.toFixed(1)); l.setAttribute("y1",y1.toFixed(1));
+    l.setAttribute("x2",x2.toFixed(1)); l.setAttribute("y2",y2.toFixed(1)); }
+  function hideEl(id){ var e=el(id); if(e) e.style.display="none"; }
+  function updateOverlay(){
+    if(!modelsOK || !wrap || !camera) return;
+    if((++overlayFrame & 1)===0) return; // every 2nd frame is ample for furniture
+    var s={x:0,y:0,behind:false};
+    tagDefs.forEach(function(td){
+      var grp = modelGroups[td.key];
+      var tag=el(td.tag), line=el(td.line);
+      if(!grp || !tag){ if(line) line.style.display="none"; if(tag) tag.style.display="none"; return; }
+      proj(td.anchor[0],td.anchor[1],td.anchor[2],s);
+      if(s.behind){ tag.style.display="none"; line.style.display="none"; return; }
+      tag.style.display=""; line.style.display="";
+      tag.style.transform="translate("+s.x.toFixed(1)+"px,"+s.y.toFixed(1)+"px) translate(-50%,-160%)";
+      setLine(td.line, s.x, s.y, s.x, s.y-13);
+    });
+    // Compass rose: rotate so N tracks world -Z on screen, exactly.
+    var c0={x:0,y:0,behind:false}, c1={x:0,y:0,behind:false};
+    proj(cam.cx,cam.cy,cam.cz,c0); proj(cam.cx,cam.cy,cam.cz-1,c1);
+    var rose=el("glRose");
+    if(rose && !c0.behind){ var ang=Math.atan2(c1.y-c0.y,c1.x-c0.x)*180/Math.PI;
+      rose.setAttribute("transform","rotate("+((ang+90).toFixed(1))+" 31 31)"); }
+    // Dimension on the visible duct run.
+    var dg = state.dimMesh;
+    var dimIds=["dimExtA","dimExtB","dimLine","dimArrA","dimArrB","tagDim"];
+    if(!dg){ dimIds.forEach(hideEl); return; }
+    if(dimDirty){ dimBox=new THREE.Box3().setFromObject(dg); dimDirty=false; }
+    if(!dimBox){ dimIds.forEach(hideEl); return; }
+    var a={x:0,y:0,behind:false}, b={x:0,y:0,behind:false}, cc={x:0,y:0,behind:false};
+    proj(dimBox.min.x,dimBox.min.y,dimBox.max.z,a);
+    proj(dimBox.min.x,dimBox.max.y,dimBox.max.z,b);
+    proj((dimBox.min.x+dimBox.max.x)/2,(dimBox.min.y+dimBox.max.y)/2,dimBox.max.z,cc);
+    if(a.behind||b.behind){ dimIds.forEach(hideEl); return; }
+    dimIds.forEach(function(id){ var e=el(id); if(e) e.style.display=""; });
+    var vx=b.x-a.x, vy=b.y-a.y, vl=Math.max(1,Math.hypot(vx,vy)); vx/=vl; vy/=vl;
+    var px=-vy, py=vx; // screen perpendicular: dimension sits outside the silhouette
+    var mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+    if(((mx+px*34)-cc.x)*px + ((my+py*34)-cc.y)*py < 0){ px=-px; py=-py; }
+    var OFF=34;
+    setLine("dimExtA", a.x+px*5, a.y+py*5, a.x+px*(OFF+7), a.y+py*(OFF+7));
+    setLine("dimExtB", b.x+px*5, b.y+py*5, b.x+px*(OFF+7), b.y+py*(OFF+7));
+    setLine("dimLine", a.x+px*OFF, a.y+py*OFF, b.x+px*OFF, b.y+py*OFF);
+    function arrow(id,tx,ty,dx,dy){
+      var p=el(id); if(!p) return;
+      var bx=tx-dx*10, by=ty-dy*10;
+      p.setAttribute("points",
+        tx.toFixed(1)+","+ty.toFixed(1)+" "+
+        (bx+px*3.6).toFixed(1)+","+(by+py*3.6).toFixed(1)+" "+
+        (bx-px*3.6).toFixed(1)+","+(by-py*3.6).toFixed(1));
+    }
+    arrow("dimArrA", a.x+px*OFF, a.y+py*OFF, -vx,-vy);
+    arrow("dimArrB", b.x+px*OFF, b.y+py*OFF,  vx, vy);
+    var dt=el("tagDim");
+    if(dt) dt.style.transform="translate("+(mx+px*(OFF+15)).toFixed(1)+"px,"+(my+py*(OFF+15)).toFixed(1)+"px) translate(-50%,-50%)";
+  }
   function animate(){
     requestAnimationFrame(animate);
     var active=el("tool-viz3d") && el("tool-viz3d").classList.contains("active");
     if(!active) return;
     var dt=Math.min(clock.getDelta(),0.05);
+    if(camAnim){
+      camAnim.t+=dt/camAnim.dur;
+      var kk=camAnim.t>=1? 1 : 1-Math.pow(1-camAnim.t,3);
+      for(var cp in camAnim.to){ cam[cp]=camAnim.from[cp]+(camAnim.to[cp]-camAnim.from[cp])*kk; }
+      if(camAnim.t>=1) camAnim=null;
+    }
+    camera.up.set(camUp[0],camUp[1],camUp[2]);
     var sp=Math.sin(cam.phi), x=cam.cx+cam.r*sp*Math.sin(cam.theta), y=cam.cy+cam.r*Math.cos(cam.phi), z=cam.cz+cam.r*sp*Math.cos(cam.theta);
     camera.position.set(x,y,z); camera.lookAt(cam.cx,cam.cy,cam.cz);
+    if(airPts) airPts.visible=st.air && bim.air;
+    if(waterPts) waterPts.visible=st.water && bim.water;
     if(!reduced){
       if(airPts && totalLen>0){
         var vA=numFrom("dVel")||6, posA=airPts.geometry.attributes.position;
@@ -1337,12 +1937,13 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
         posA.needsUpdate=true;
       }
       if(waterPts){
-        var vW=numFrom("wVel")||1, posW=waterPts.geometry.attributes.position, L=6.0;
-        for(var j=0;j<waterOff.length;j++){ waterOff[j]=(waterOff[j]+dt*vW*0.55/L)%1; posW.setXYZ(j,-1.8+waterOff[j]*L,0.78,1.6); }
+        var vW=numFrom("wVel")||1, posW=waterPts.geometry.attributes.position, L=5.7;
+        for(var j=0;j<waterOff.length;j++){ waterOff[j]=(waterOff[j]+dt*vW*0.55/L)%1; posW.setXYZ(j,-2.7+waterOff[j]*L,0.98,1.6); }
         posW.needsUpdate=true;
       }
     }
     renderer.render(scene,camera);
+    updateOverlay();
   }
   setInterval(function(){
     var sec=el("tool-viz3d"); if(!sec) return;
