@@ -242,6 +242,7 @@ svg{max-width:100%;height:auto;display:block}
   <div class="navlabel">Start here</div>
   <button class="navbtn active" data-tool="home"><span class="dot" style="background:var(--ink)"></span>Overview</button>
   <button class="navbtn" data-tool="viz3d" data-keys="3d visual model viewer plant room duct pipe three dimensional render"><span class="dot" style="background:var(--accent)"></span>3D System Viewer</button>
+  <button class="navbtn" data-tool="usecases" data-keys="use cases what for 3d viewer fit check clash coordination section plan walkthrough"><span class="dot" style="background:var(--accent)"></span>3D Viewer: Use Cases</button>
   <div class="navlabel">Air side</div>
   <button class="navbtn" data-tool="duct" data-keys="duct air friction sizing"><span class="dot" style="background:var(--air)"></span>Duct Sizer</button>
   <button class="navbtn" data-tool="psych" data-keys="psychrometric humidity enthalpy dew wet bulb air state"><span class="dot" style="background:var(--air)"></span>Psychrometrics</button>
@@ -307,6 +308,37 @@ svg{max-width:100%;height:auto;display:block}
 </section>
 
 <!-- ============ DUCT ============ -->
+
+<!-- ============ 3D VIEWER USE CASES ============ -->
+<section class="tool" id="tool-usecases">
+  <div class="toolhead"><h2>What the 3D view is for</h2><p>Four jobs this view earns its keep on. Each one opens the viewer already set up for the job.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+    <div class="card">
+      <h3>1 · Fit check: will it fit the void?</h3>
+      <p>The classic plant-room failure: the main run is sized for airflow, then the ceiling void turns out to be 400 mm deep and the duct is not. Size the run in the Duct Sizer, then open the Section view. The clip plane cuts the run so you read the true section and its height against the 1 m grid, before a single line is drawn in CAD.</p>
+      <button class="go3d" data-uc="fit">Open the section view <span>&#8599;</span></button>
+    </div>
+    <div class="card">
+      <h3>2 · Coordination: do the runs clash?</h3>
+      <p>Duct over pipes looks fine on two separate drawings and clashes on site. Here both systems share one room: orbit it and check the branch take-offs against the pipe risers and the pump set with your own eyes. Ten seconds of orbiting beats a clash found by the installer.</p>
+      <button class="go3d" data-uc="coord">Open the coordination view <span>&#8599;</span></button>
+    </div>
+    <div class="card">
+      <h3>3 · Sizes at a glance</h3>
+      <p>Plan view, drawing style. The tags carry the live section and bore, the dimension reads the duct size off the model itself, and the strip at the top states both velocities. It is the quickest honest answer to "what size is that run, and how fast is it moving?"</p>
+      <button class="go3d" data-uc="plan">Open plan, hidden line <span>&#8599;</span></button>
+    </div>
+    <div class="card">
+      <h3>4 · Show it to someone who does not read drawings</h3>
+      <p>Clients and project managers do not read GA plans, and they should not have to. Realistic view, flow particles on: air moving through the duct, water through the pipes, at speeds set by your calculated velocities. The design explains itself in one look.</p>
+      <button class="go3d" data-uc="walk">Open the walkthrough view <span>&#8599;</span></button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>The rule behind all four</h3>
+    <p>The room is not a picture of your design, it is generated from your design: change a duct section or a pipe bore in the calculators and the model rebuilds itself. So the check runs both ways: if the room looks wrong, a number upstream is wrong. It stays a design-stage aid, not for construction, and final verification stays with a qualified engineer.</p>
+  </div>
+</section>
 <section class="tool" id="tool-duct">
   <div class="toolhead"><h2>Duct Sizer</h2><p>Equal-friction or velocity sizing for round and rectangular duct.</p></div>
   <div class="grid">
@@ -2101,6 +2133,26 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     else if (/^[0-9]$/.test(e.key)) { var n = parseInt(e.key, 10); go(n === 0 ? 9 : n - 1); }
   });
 })();
+</script>
+<script>
+document.querySelectorAll("[data-uc]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var uc=b.dataset.uc;
+    function seg(id,v){ var x=document.querySelector("#"+id+" button[data-v='"+v+"']"); if(x && !x.classList.contains("on")) x.click(); }
+    function tgl(id,on){ var x=document.getElementById(id); if(x && (x.classList.contains("on")!==on)) x.click(); }
+    showTool("viz3d");
+    function apply(){
+      if(uc==="fit"){ seg("bimView","section"); seg("bimStyle","shaded"); }
+      if(uc==="coord"){ seg("bimView","3d"); seg("bimStyle","realistic"); tgl("tglSysAir",true); tgl("tglSysWater",true); }
+      if(uc==="plan"){ seg("bimView","plan"); seg("bimStyle","hiddenline"); seg("bimDetail","medium"); }
+      if(uc==="walk"){ seg("bimView","3d"); seg("bimStyle","realistic"); tgl("tglAir",true); tgl("tglWater",true); }
+    }
+    // The viewer binds its controls when it first opens; give that a beat,
+    // then apply, and re-apply once if a control had not bound yet.
+    setTimeout(apply, 450);
+    setTimeout(apply, 1400);
+  });
+});
 </script>
 </body>
 </html>
