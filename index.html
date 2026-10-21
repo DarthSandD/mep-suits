@@ -1175,9 +1175,28 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     m.userData.envI=(envI==null?0.9:envI);
     MATS_ALL.push(m); CLIP_MATS.push(m); return m;
   }
+  function spangleTex(base, flecks, streak){
+    var cv=document.createElement("canvas"); cv.width=cv.height=256;
+    var cx2=cv.getContext("2d"); cx2.fillStyle=base; cx2.fillRect(0,0,256,256);
+    for(var i=0;i<2400;i++){
+      cx2.fillStyle=flecks[i%flecks.length];
+      cx2.globalAlpha=0.05+Math.random()*0.10;
+      var r=1+Math.random()*3.2;
+      cx2.beginPath(); cx2.arc(Math.random()*256,Math.random()*256,r,0,7); cx2.fill();
+    }
+    if(streak){ cx2.globalAlpha=0.05; cx2.fillStyle="#ffffff";
+      for(var y2=0;y2<256;y2+=3){ cx2.fillRect(0,y2,256,1); } }
+    cx2.globalAlpha=1;
+    var t=new THREE.CanvasTexture(cv);
+    t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(2,2);
+    return t;
+  }
   function buildMaterials(){
-    MAT.galv   =M({color:0xb8c0c8, metalness:0.85, roughness:0.38});
-    MAT.galvDk =M({color:0x848e99, metalness:0.8,  roughness:0.45});
+    var galvTex=spangleTex("#b4bec7",["#d7dee5","#97a3ae","#c9d2da"],true);
+    var galvDkTex=spangleTex("#7f8a95",["#9aa5b0","#6b7681","#8d99a4"],true);
+    var steelTex=spangleTex("#a7b1b9",["#c3ccd3","#939fa8"],false);
+    MAT.galv   =M({color:0xffffff, map:galvTex, metalness:0.72, roughness:0.42});
+    MAT.galvDk =M({color:0xffffff, map:galvDkTex, metalness:0.7,  roughness:0.48});
     MAT.galvDS =M({color:0xb8c0c8, metalness:0.85, roughness:0.38, side:THREE.DoubleSide});
     MAT.trim   =M({color:0x5d6873, metalness:0.7,  roughness:0.5});
     MAT.casing =M({color:0xdfe3e6, metalness:0.35, roughness:0.52});
@@ -1185,7 +1204,7 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     MAT.coil   =M({color:0x9fb6c1, metalness:0.9,  roughness:0.32});
     MAT.coilDk =M({color:0x39424b, metalness:0.6,  roughness:0.6});
     MAT.fanDk  =M({color:0x2f363d, metalness:0.5,  roughness:0.55});
-    MAT.steel  =M({color:0xa9b2ba, metalness:0.9,  roughness:0.3});
+    MAT.steel  =M({color:0xffffff, map:steelTex, metalness:0.82, roughness:0.34});
     MAT.clad   =M({color:0xe9e5db, metalness:0.05, roughness:0.85});
     MAT.foil   =M({color:0xc9ccce, metalness:0.65, roughness:0.48});
     MAT.valve  =M({color:0x37506b, metalness:0.6,  roughness:0.45});
@@ -1194,7 +1213,7 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     MAT.motor  =M({color:0x2f5d8a, metalness:0.45, roughness:0.5});
     MAT.plinth =M({color:0x9aa0a4, metalness:0.0,  roughness:0.95});
     MAT.hidden =new THREE.MeshBasicMaterial({color:0xf2f5f7});
-    MAT.edge   =new THREE.LineBasicMaterial({color:0x2c4258});
+    MAT.edge   =new THREE.LineBasicMaterial({color:0x35485c, transparent:true, opacity:0.5});
     HL_BG=new THREE.Color(0xf7f9fa);
   }
   function box(w,h,d,mat,x,y,z,parent){
@@ -1224,13 +1243,23 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     box(1.06,1.24,0.05,MAT.coilDk,-0.52,0.99,0.53,g);
     var fins=new THREE.Group(); g.add(fins);
     for(var i=0;i<26;i++){ box(0.014,1.18,0.02,MAT.coil,-1.0+i*0.0385,0.99,0.56,fins); }
-    cyl(0.40,0.40,0.045,MAT.fanDk,0.66,1.06,0.545,g,"z",28);
-    [0.34,0.25,0.16].forEach(function(r){ tor(r,0.011,MAT.trim,0.66,1.06,0.578,g); });
-    cyl(0.07,0.07,0.06,MAT.trim,0.66,1.06,0.578,g,"z",16);
-    var spokes=new THREE.Group(); spokes.position.set(0.66,1.06,0.572); g.add(spokes);
+    box(1.02,1.02,0.05,MAT.panel,0.66,1.06,0.545,g);
+    cyl(0.40,0.40,0.045,MAT.fanDk,0.66,1.06,0.578,g,"z",28);
+    [0.34,0.25,0.16].forEach(function(r){ tor(r,0.011,MAT.trim,0.66,1.06,0.608,g); });
+    cyl(0.07,0.07,0.06,MAT.trim,0.66,1.06,0.608,g,"z",16);
+    var spokes=new THREE.Group(); spokes.position.set(0.66,1.06,0.6); g.add(spokes);
+    for(var b2=0;b2<5;b2++){ var bl=box(0.30,0.085,0.014,MAT.fanDk,0,0,0,spokes); var ba=b2*Math.PI*2/5; bl.position.set(Math.cos(ba)*0.20,Math.sin(ba)*0.20,-0.012); bl.rotation.z=ba+0.5; }
     for(var s2=0;s2<3;s2++){ var sp=box(0.74,0.02,0.012,MAT.trim,0,0,0,spokes); sp.rotation.z=s2*Math.PI/3; }
     box(0.03,0.95,0.62,MAT.panel,1.165,0.95,0.02,g);
     box(0.05,0.05,0.2,MAT.trim,1.19,0.95,-0.18,g);
+    box(0.04,0.09,0.03,MAT.trim,1.19,1.28,-0.16,g);
+    box(0.04,0.09,0.03,MAT.trim,1.19,0.62,-0.16,g);
+    box(2.34,0.10,0.14,MAT.trim,0,0.19,-0.36,g);
+    box(2.34,0.10,0.14,MAT.trim,0,0.19,0.36,g);
+    [[-1.12,-0.5],[1.12,-0.5],[-1.12,0.5],[1.12,0.5]].forEach(function(p){ box(0.055,1.7,0.055,MAT.trim,p[0],0.99,p[1],g); });
+    box(0.04,1.3,0.9,MAT.panel,-1.16,0.99,0,g);
+    for(var l2=0;l2<6;l2++){ var sl=box(0.03,0.10,0.84,MAT.galvDk,-1.20,0.50+l2*0.163,0,g); sl.rotation.z=0.6; }
+    box(0.17,0.11,0.012,MAT.fanDk,0.08,0.42,0.533,g);
     g.userData.det={medium:[],fine:[fins,spokes]};
     tagComp(g,"unit");
     return g;
@@ -1306,15 +1335,21 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
       });
       box(0.55,H*0.92,W*0.92,MAT.galv,-3.32,cy,cz,g);
       [-3.02,-1.2,0.65].forEach(function(x){ det.medium.push(flangeRect(x,cy,cz,W,H,g)); });
+      segs.forEach(function(s2){
+        box(s2[1]-s2[0]-0.08,0.014,0.03,MAT.galvDk,(s2[0]+s2[1])/2,cy+H/2+0.004,cz,g);
+      });
+      det.medium.push(flangeRect(-2.1,cy,cz,W,H,g));
+      det.medium.push(flangeRect(1.6,cy,cz,W,H,g));
       var rD=clamp(val("dD",630)/2000,0.09,0.55);
       var fr=frustumMesh(2.55,3.08,cy,cz,H,W,rD,MAT.galvDS); g.add(fr);
-      cyl(rD,rD,0.85,MAT.galv,3.5,cy,cz,g,"x",24);
-      cyl(rD+0.012,rD+0.012,0.035,MAT.galvDk,3.94,cy,cz,g,"x",24);
+      cyl(rD,rD,0.62,MAT.galv,3.39,cy,cz,g,"x",24);
+      cyl(rD+0.012,rD+0.012,0.035,MAT.galvDk,3.72,cy,cz,g,"x",24);
       branchRect(g,det,-0.85,cy,cz,W,H,true);
       branchRect(g,det, 1.55,cy,cz,W,H,false);
     } else {
       var R=d.r;
       var main=cyl(R,R,5.6,MAT.galv,-0.25,cy,cz,g,"x",30); state.dimMesh=main;
+      det.medium.push(tor(R+0.014,0.02,MAT.galvDk,1.6,cy,cz,g,0,Math.PI/2));
       cyl(R+0.01,R+0.01,0.035,MAT.galvDk,2.57,cy,cz,g,"x",30);
       [-1.2,0.65].forEach(function(x){ var t=tor(R+0.014,0.02,MAT.galvDk,x,cy,cz,g,0,Math.PI/2); det.medium.push(t); });
       branchRound(g,det,-0.85,cy,cz,R,true);
@@ -1464,16 +1499,16 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
   function applyStyle(){
     if(!scene) return;
     var s=bim.style, hl=(s==="hiddenline");
-    if(hl) ensureEdges();
+    if(hl || s==="shaded" || s==="realistic") ensureEdges();
     if(bimRoot) bimRoot.traverse(function(o){
       if(!o.isMesh) return;
       if(hl){ if(!o.userData.m0) o.userData.m0=o.material; o.material=MAT.hidden; }
       else if(o.userData.m0){ o.material=o.userData.m0; o.userData.m0=null; }
     });
-    setEdges(hl);
+    setEdges(hl || s==="shaded" || s==="realistic");
     MATS_ALL.forEach(function(m){
       m.wireframe=(s==="wireframe");
-      if(m.isMeshStandardMaterial) m.envMapIntensity=(s==="realistic")? m.userData.envI : 0.22;
+      if(m.isMeshStandardMaterial) m.envMapIntensity=(s==="realistic")? m.userData.envI : 0.3;
     });
     if(renderer) renderer.toneMappingExposure=(s==="realistic")? 1.05 : 1.0;
     scene.background=hl? HL_BG : bgTex;
@@ -1481,8 +1516,8 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     applyClip();
   }
   var VIEWS={
-    "3d":{theta:0.72,phi:1.05,r:12.8,cx:-0.4,cy:1.5,cz:0,up:[0,1,0],clip:false},
-    "plan":{theta:0.0,phi:0.06,r:19.0,cx:-0.45,cy:0.0,cz:0.2,up:[0,0,-1],clip:false},
+    "3d":{theta:0.72,phi:1.05,r:10.4,cx:-0.4,cy:1.3,cz:0,up:[0,1,0],clip:false},
+    "plan":{theta:0.0,phi:0.06,r:16.0,cx:-0.15,cy:0.0,cz:0.3,up:[0,0,-1],clip:false},
     "section":{theta:0.0,phi:1.30,r:11.0,cx:-0.2,cy:1.7,cz:-0.3,up:[0,1,0],clip:true},
     "elevation":{theta:Math.PI/2,phi:1.32,r:11.5,cx:-0.2,cy:1.6,cz:0,up:[0,1,0],clip:false}
   };
@@ -1576,12 +1611,34 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     // 1 m grid aligned to the room, so the view reads as a CAD model view
     // and equipment scale can be judged against the grid. Component tags
     // are HTML overlays now (see updateOverlay), not sprites.
-    var floor=new THREE.Mesh(new THREE.PlaneGeometry(34,22), new THREE.MeshStandardMaterial({color:0xccd3da,roughness:0.97,metalness:0,envMap:envTex,envMapIntensity:0.25}));
+    var floor=new THREE.Mesh(new THREE.PlaneGeometry(34,22), new THREE.MeshStandardMaterial({color:0xc2cbd3,roughness:0.97,metalness:0,envMap:envTex,envMapIntensity:0.25}));
     floor.rotation.x=-Math.PI/2; floor.position.set(0,0,0); floor.receiveShadow=true; scene.add(floor);
     MATS_ALL.push(floor.material); floor.material.userData.envI=0.25;
     var grid=new THREE.GridHelper(24,24,0x8fa0ae,0xb4bfc9);
-    grid.position.y=0.01; grid.material.transparent=true; grid.material.opacity=0.6; grid.material.depthWrite=false;
+    grid.position.y=0.01; grid.material.transparent=true; grid.material.opacity=0.78; grid.material.depthWrite=false;
     scene.add(grid);
+    // V4 room context: a back wall and column for scale, and soft AO
+    // grounding pools under the equipment so models sit on the slab.
+    var wallMat=new THREE.MeshStandardMaterial({color:0xcbd3db,roughness:0.95,metalness:0,envMap:envTex,envMapIntensity:0.2});
+    var wall=new THREE.Mesh(new THREE.BoxGeometry(17,3.6,0.15), wallMat);
+    wall.position.set(0,1.8,-3.7); wall.receiveShadow=true; scene.add(wall);
+    var col=new THREE.Mesh(new THREE.BoxGeometry(0.45,3.6,0.45), wallMat);
+    col.position.set(6.6,1.8,-3.42); col.castShadow=true; col.receiveShadow=true; scene.add(col);
+    var aoCv=document.createElement("canvas"); aoCv.width=aoCv.height=128;
+    var aoCx=aoCv.getContext("2d");
+    var grd=aoCx.createRadialGradient(64,64,6,64,64,62);
+    grd.addColorStop(0,"rgba(24,34,46,0.55)"); grd.addColorStop(1,"rgba(24,34,46,0)");
+    aoCx.fillStyle=grd; aoCx.fillRect(0,0,128,128);
+    var aoTex=new THREE.CanvasTexture(aoCv);
+    function aoBlob(w,d,x,z,op){
+      var p=new THREE.Mesh(new THREE.PlaneGeometry(w,d),
+        new THREE.MeshBasicMaterial({map:aoTex,transparent:true,opacity:op,depthWrite:false}));
+      p.rotation.x=-Math.PI/2; p.position.set(x,0.012,z); scene.add(p);
+    }
+    aoBlob(3.4,2.2,-4.2,-0.55,0.5);
+    aoBlob(9.5,2.0,0.2,-1.1,0.30);
+    aoBlob(2.0,1.6,3.6,1.6,0.45);
+    aoBlob(7.5,1.3,0.2,1.6,0.28);
     // Airflow path follows the duct centreline (y 2.35 sits inside both the
     // rectangular run, 2.0–2.82, and the circular run, 2.0–2.54).
     pathPts=[]; cumLen=[]; totalLen=0;
@@ -1872,8 +1929,11 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
       proj(td.anchor[0],td.anchor[1],td.anchor[2],s);
       if(s.behind){ tag.style.display="none"; line.style.display="none"; return; }
       tag.style.display=""; line.style.display="";
-      tag.style.transform="translate("+s.x.toFixed(1)+"px,"+s.y.toFixed(1)+"px) translate(-50%,-160%)";
-      setLine(td.line, s.x, s.y, s.x, s.y-13);
+      var tw=tag.offsetWidth||120;
+      var tx=Math.min(Math.max(s.x, tw/2+4), Math.max(tw/2+4, wrap.clientWidth-tw/2-4));
+      var ty=Math.max(s.y, 42);
+      tag.style.transform="translate("+tx.toFixed(1)+"px,"+ty.toFixed(1)+"px) translate(-50%,-160%)";
+      setLine(td.line, s.x, s.y, tx, s.y-13);
     });
     // Compass rose: rotate so N tracks world -Z on screen, exactly.
     var c0={x:0,y:0,behind:false}, c1={x:0,y:0,behind:false};
@@ -1912,7 +1972,9 @@ calcDuct(); calcPsych(); ventSyncType(); calcPipe(); calcWater(); calcFan(); cal
     arrow("dimArrA", a.x+px*OFF, a.y+py*OFF, -vx,-vy);
     arrow("dimArrB", b.x+px*OFF, b.y+py*OFF,  vx, vy);
     var dt=el("tagDim");
-    if(dt) dt.style.transform="translate("+(mx+px*(OFF+15)).toFixed(1)+"px,"+(my+py*(OFF+15)).toFixed(1)+"px) translate(-50%,-50%)";
+    if(dt){ var dx2=Math.min(Math.max(mx+px*(OFF+15),46), Math.max(46,wrap.clientWidth-46));
+      var dy2=Math.min(Math.max(my+py*(OFF+15),16), Math.max(16,wrap.clientHeight-16));
+      dt.style.transform="translate("+dx2.toFixed(1)+"px,"+dy2.toFixed(1)+"px) translate(-50%,-50%)"; }
   }
   function animate(){
     requestAnimationFrame(animate);
