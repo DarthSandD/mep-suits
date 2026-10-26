@@ -4,7 +4,7 @@
   <img src="docs/assets/mep-suits-banner.png" alt="MEP Suits banner">
 </p>
 
-**Live: https://darthsandd.github.io/mep-suits/**
+**Live: https://mepsuits.pages.dev/**
 
 MEP Suits is a browser-based toolkit for building services mechanical engineering, built by an engineer for the plant room. It pairs 8 HVAC calculators with property and reference data, a calculation record for QA, and a 3D System Viewer. It runs as a single page with no backend, and no data leaves the browser.
 
